@@ -3,13 +3,18 @@
 
 #include<string>
 #include<vector>
+#include<map>
 
 namespace rate{
     class itinerated_map{
         private:
             // network variables
+            // number of elements in the system
             int N;
+            // State vector
             std::vector<float> State;
+            // pattern container
+            std::map<int, std::vector<float>> Patterns;
         public:
             void hello(std::string msg);
     };
