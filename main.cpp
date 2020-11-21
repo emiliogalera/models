@@ -2,10 +2,10 @@
 #include "models.h"
 int main(){
 
-    rate::itinerated_map bla;
+    rate::ItineratedMap bla(100);
+    rate::ItineratedMap bla2(100, 0.1, 0.5);
     spiking::lif bla_lif;
 
-    bla.hello("jaslçdkfj");
     bla_lif.hello("Hello from lif");
 
     return 0;

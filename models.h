@@ -3,20 +3,27 @@
 
 #include<string>
 #include<vector>
+#include<random>
 #include<map>
 
 namespace rate{
-    class itinerated_map{
+    class ItineratedMap{
+        /**
+         * Generates a network of rate based neurons interacting in a
+         * all to all network.
+         * Model from Kinouchi 2008
+        */
         private:
             // network variables
-            // number of elements in the system
-            int N;
-            // State vector
-            std::vector<float> State;
-            // pattern container
-            std::map<int, std::vector<float>> Patterns;
+            int N; // number of elements in the system
+            std::mt19937 eng; //random number engine. Needs a seed (random device)
+            std::uniform_real_distribution<float> dist;
+
+            std::vector<float> State; // State vector
+            std::map<int, std::vector<float>> Patterns; // pattern container
         public:
-            void hello(std::string msg);
+            ItineratedMap(int n_elements);
+            ItineratedMap(int n_elements, float a, float b);
     };
 }
 
