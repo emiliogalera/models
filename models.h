@@ -16,11 +16,14 @@ namespace rate{
         private:
             // network variables
             int N; // number of elements in the system
+            int P; // number of patterns to be stored in the system
             std::mt19937 eng; //random number engine. Needs a seed (random device)
             std::uniform_real_distribution<float> dist;
 
             std::vector<float> State; // State vector
             std::map<int, std::vector<float>> Patterns; // pattern container
+
+            //void tanh();
         public:
             ItineratedMap(int n_elements);
             ItineratedMap(int n_elements, float a, float b);
