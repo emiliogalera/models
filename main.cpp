@@ -7,6 +7,8 @@ int main(){
     spiking::lif bla_lif;
 
     bla.store_random_state(0.3);
+    bla.store_random_state(0.1);
+    bla.store_random_state(1.0);
     bla2.store_random_state(0.3);
 
     bla_lif.hello("Hello from lif");

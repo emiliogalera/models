@@ -44,6 +44,7 @@ void rate::ItineratedMap::store_random_state(float prob){
     }
 
     Patterns.insert(std::pair<int, std::vector<float>>(P, xi));
+    ++P;
 
 }
 
