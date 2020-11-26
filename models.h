@@ -20,7 +20,7 @@ namespace rate{
             std::mt19937 eng; //random number engine. Needs a seed (random device)
             std::uniform_real_distribution<float> dist; // distribution used for random process
 
-            std::vector<float> State; // State vector
+            std::vector<float> State; // Current state vector
             std::map<int, std::vector<float>> Patterns; // pattern container
 
             std::vector<std::vector<float>> J_heb; // Hebbian part of the connection matrix
@@ -31,6 +31,9 @@ namespace rate{
             // Constructors
             ItineratedMap(int n_elements);
             ItineratedMap(int n_elements, float a, float b);
+
+            // Store new random state function
+            void store_random_state(float prob);
     };
 }
 
