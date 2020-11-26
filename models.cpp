@@ -12,7 +12,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements): N(n_elements){
 }
 
 // A constructor with a random initial state
-// Use with caution, it sets the interval to a, b!
+// Use with caution, it sets the the state of each element in the interval to a, b!
 rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b): N(n_elements){
     std::random_device dev;
     eng.seed(dev());
