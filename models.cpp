@@ -48,6 +48,10 @@ void rate::ItineratedMap::store_random_state(float prob){
 
 }
 
+std::vector<float>& rate::ItineratedMap::get_xi(int u){
+    return Patterns[u];
+}
+
 // spiking models namespace
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;

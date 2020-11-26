@@ -34,6 +34,9 @@ namespace rate{
 
             // Store new random state function
             void store_random_state(float prob);
+
+            // Probe function
+            std::vector<float>& get_xi(int u);
     };
 }
 

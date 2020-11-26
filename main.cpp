@@ -11,6 +11,11 @@ int main(){
     bla.store_random_state(1.0);
     bla2.store_random_state(0.3);
 
+    for(float &xi_i : bla.get_xi(0)){
+        std::cout << xi_i << " ";
+    }
+    std::cout << std::endl;
+
     bla_lif.hello("Hello from lif");
 
     return 0;
