@@ -33,7 +33,7 @@ namespace rate{
             ItineratedMap(int n_elements, float a, float b);
 
             // Store new random state function
-            void store_random_state(float prob);
+            void store_random_state();
 
             // Probe function
             std::vector<float>& get_xi(int u);

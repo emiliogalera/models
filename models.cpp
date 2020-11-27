@@ -30,7 +30,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b): N(n_elemen
     P = 0;
 }
 
-void rate::ItineratedMap::store_random_state(float prob){
+void rate::ItineratedMap::store_random_state(){
 
     //TODO: this snippet is used a lot throughout the code. Put it in a func
     std::random_device dev;
