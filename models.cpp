@@ -52,6 +52,39 @@ std::vector<float>& rate::ItineratedMap::get_xi(int u){
     return Patterns[u];
 }
 
+void rate::ItineratedMap::state_zero_random(){
+    std::random_device dev;
+    dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
+    eng.seed(dev());
+    dist.reset();
+
+    if(State.size() == 0){
+        for(int i = 0; i != N; ++i){
+            State.push_back(dist(eng));
+        }
+    }
+    else if (State.size() == N){
+        for(float &si : State){
+            si = dist(eng);
+        }
+    }
+}
+
+void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
+    if(State.size() == 0){
+        for(float &s0i : state0){
+            State.push_back(s0i);
+        }
+    }
+    else if (State.size() == N){
+        int aux = 0;
+        for(float &si : State){
+            si = state0[aux];
+            ++aux;
+        }
+    }
+}
+
 // spiking models namespace
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;

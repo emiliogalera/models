@@ -35,6 +35,12 @@ namespace rate{
             // Store new random state function
             void store_random_state();
 
+            //Genarate a new initial random state
+            void state_zero_random();
+
+            //Generate a new initial state from user
+            void state_zero_external(std::vector<float> &state0);
+
             // Probe function
             std::vector<float>& get_xi(int u);
     };
