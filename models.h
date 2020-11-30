@@ -17,6 +17,8 @@ namespace rate{
             // network variables
             int N; // number of elements in the system
             int P; // number of patterns stored in the system
+            float gamma; // state update parameter
+
             std::mt19937 eng; //random number engine. Needs a seed (random device)
             std::uniform_real_distribution<float> dist; // distribution used for random process
 
@@ -25,12 +27,17 @@ namespace rate{
 
             std::vector<std::vector<float>> J_heb; // Hebbian part of the connection matrix
             std::vector<std::vector<float>> J_nheb; // Anti-hebbian of the connection matrix
+            float epsilon; //anti-hebbian dynamic parameter
+            float tau; //anti-hebbian dynamic parameter
 
             //void tanh();
         public:
             // Constructors
-            ItineratedMap(int n_elements);
-            ItineratedMap(int n_elements, float a, float b);
+            ItineratedMap(int n_elements, float gma);
+            ItineratedMap(int n_elements, float a, float b, float gma);
+
+            // Define the parameters for the connection matrix (anti-hebbian term)
+            void anti_hebb_param(float _tau, float eps);
 
             // Store new random state function
             void store_random_state();

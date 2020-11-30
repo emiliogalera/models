@@ -5,7 +5,7 @@
 #include "models.h"
 
 // The most simple constructor
-rate::ItineratedMap::ItineratedMap(int n_elements): N(n_elements){
+rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), gamma(gma){
     std::random_device dev;
     eng.seed(dev());
     dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
@@ -16,7 +16,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements): N(n_elements){
 
 // A constructor with a random initial state
 // Use with caution, it sets the the state of each element in the interval to a, b!
-rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b): N(n_elements){
+rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma): N(n_elements), gamma(gma){
     std::random_device dev;
     eng.seed(dev());
     dist.param(std::uniform_real_distribution<float>::param_type(a, b));
@@ -28,6 +28,11 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b): N(n_elemen
     dist.reset();
 
     P = 0;
+}
+
+void rate::ItineratedMap::anti_hebb_param(float _tau, float eps){
+    tau = _tau;
+    epsilon = eps;
 }
 
 void rate::ItineratedMap::store_random_state(){
