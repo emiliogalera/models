@@ -35,6 +35,10 @@ void rate::ItineratedMap::anti_hebb_param(float _tau, float eps){
     epsilon = eps;
 }
 
+void rate::ItineratedMap::model_param(float gma){
+    gamma = gma;
+}
+
 void rate::ItineratedMap::store_random_state(){
 
     //TODO: this snippet is used a lot throughout the code. Put it in a func

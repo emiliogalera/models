@@ -39,6 +39,9 @@ namespace rate{
             // Define the parameters for the connection matrix (anti-hebbian term)
             void anti_hebb_param(float _tau, float eps);
 
+            // Define parameter of the model (gamma)
+            void model_param(float gma);
+
             // Store new random state function
             void store_random_state();
 

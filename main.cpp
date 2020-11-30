@@ -16,6 +16,7 @@ int main(){
     bla.store_random_state();
     bla.store_random_state();
     bla.store_random_state();
+    bla.model_param(0.3);
     bla2.store_random_state();
 
     for(float &xi_i : bla.get_xi(0)){
