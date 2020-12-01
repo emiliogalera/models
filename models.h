@@ -54,6 +54,9 @@ namespace rate{
             //Calculate the Hebbian part of the connection matrix
             void make_JHebbian();
 
+            //Make the initial state of the anti-Hebbian matrix
+            void anti_Hebb_init();
+
             // Probe function
             std::vector<float>& get_xi(int u);
     };

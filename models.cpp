@@ -122,6 +122,22 @@ void rate::ItineratedMap::make_JHebbian(){
     }
 }
 
+void rate::ItineratedMap::anti_Hebb_init(){
+    if(J_nheb.size() == 0){
+        for(std::vector<float>::size_type i = 0; i != N; ++i){
+            std::vector<float> aux_i(N, 0);
+            J_nheb.push_back(aux_i);
+        }
+    }
+    else if(J_nheb.size() == N){
+        for(std::vector<float>::size_type i = 0; i != N; ++i){
+            for(std::vector<float>::size_type j = 0; j != N; ++j){
+                J_nheb[i][j] = 0.0;
+            }
+        }
+    }
+}
+
 // spiking models namespace
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;
