@@ -15,7 +15,7 @@ namespace rate{
         */
         private:
             // network variables
-            int N; // number of elements in the system
+            std::vector<float>::size_type N; // number of elements in the system
             int P; // number of patterns stored in the system
             float gamma; // state update parameter
 
@@ -50,6 +50,9 @@ namespace rate{
 
             //Generate a new initial state from user
             void state_zero_external(std::vector<float> &state0);
+
+            //Calculate the Hebbian part of the connection matrix
+            void make_JHebbian();
 
             // Probe function
             std::vector<float>& get_xi(int u);

@@ -21,7 +21,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma):
     eng.seed(dev());
     dist.param(std::uniform_real_distribution<float>::param_type(a, b));
 
-    for(int i = 0; i != N; ++i){
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
         State.push_back(dist(eng));
     }
     eng.seed(dev());
@@ -48,7 +48,7 @@ void rate::ItineratedMap::store_random_state(){
     dist.reset();
 
     std::vector<float> xi;
-    for(int i = 0; i != N; ++i){
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
         xi.push_back(dist(eng));
     }
 
@@ -68,7 +68,7 @@ void rate::ItineratedMap::state_zero_random(){
     dist.reset();
 
     if(State.size() == 0){
-        for(int i = 0; i != N; ++i){
+        for(std::vector<float>::size_type i = 0; i != N; ++i){
             State.push_back(dist(eng));
         }
     }
@@ -90,6 +90,34 @@ void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
         for(float &si : State){
             si = state0[aux];
             ++aux;
+        }
+    }
+}
+
+
+void rate::ItineratedMap::make_JHebbian(){
+    if(J_heb.size() == 0){
+        for(std::vector<float>::size_type i = 0; i != N; ++i){
+            std::vector<float> Jihebb;
+            for(std::vector<float>::size_type j = 0; j != N; ++j){
+                float aux = 0.0;
+                for(int u = 0; u != P; ++u){
+                    aux += Patterns[u][i]*Patterns[u][j];
+                }
+                Jihebb.push_back(aux/float(N)); //TODO: ask Osame if this normalization is correct. It seems off...
+            }
+            J_heb.push_back(Jihebb);
+        }
+    }
+    else if(J_heb.size() == N){
+        for(std::vector<float>::size_type i = 0; i != N; ++i){
+            for(std::vector<float>::size_type j = 0; j != N; ++j){
+                float aux = 0.0;
+                for(int u = 0; u != P; ++u){
+                    aux += Patterns[u][i]*Patterns[u][j];
+                }
+            J_heb[i][j] = aux/float(N); //TODO: ask Osame if this normalization is correct. It seems off...
+            }
         }
     }
 }
