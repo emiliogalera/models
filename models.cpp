@@ -150,6 +150,16 @@ void rate::ItineratedMap::anti_Hebb_update(){
     }
 }
 
+void rate::ItineratedMap::activity_update(){
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
+        float aux = 0.0;
+        for(std::vector<float>::size_type j = 0; j != N; ++j){
+            aux += (J_heb[i][j] + J_nheb[i][j])*State[j];
+        }
+        h_vec[i] = aux;
+    }
+}
+
 // spiking models namespace
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;

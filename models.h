@@ -58,7 +58,11 @@ namespace rate{
             //Make the initial state of the anti-Hebbian matrix
             void anti_Hebb_init();
 
+            //Update the anti-Hebbian matrix
             void anti_Hebb_update();
+
+            //Update the activity vector of the network
+            void activity_update();
 
             // Probe function
             std::vector<float>& get_xi(int u);
