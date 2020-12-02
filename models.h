@@ -27,6 +27,7 @@ namespace rate{
 
             std::vector<std::vector<float>> J_heb; // Hebbian part of the connection matrix
             std::vector<std::vector<float>> J_nheb; // Anti-hebbian of the connection matrix
+            std::vector<float> h_vec; //activity vector, this vector stores the activity of every unit in that instant
             float epsilon; //anti-hebbian dynamic parameter
             float tau; //anti-hebbian dynamic parameter
 

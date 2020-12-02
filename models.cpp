@@ -9,6 +9,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), ga
     std::random_device dev;
     eng.seed(dev());
     dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
+    h_vec = std::vector<float>(N, 0.0);
 
     P = 0;
 
@@ -27,6 +28,7 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma):
     eng.seed(dev());
     dist.reset();
 
+    h_vec = std::vector<float>(N, 0.0);
     P = 0;
 }
 
