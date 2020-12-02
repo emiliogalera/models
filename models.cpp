@@ -138,6 +138,16 @@ void rate::ItineratedMap::anti_Hebb_init(){
     }
 }
 
+void rate::ItineratedMap::anti_Hebb_update(){
+    float aux1 = (1.0 - (1.0/tau));
+    float aux2 = (epsilon/float(N));
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
+        for(std::vector<float>::size_type j = 0; j != N; ++j){
+            J_nheb[i][j] = (aux1*J_nheb[i][j]) - (aux2*(State[i]*State[j]));
+        }
+    }
+}
+
 // spiking models namespace
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;
