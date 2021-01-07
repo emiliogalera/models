@@ -10,7 +10,7 @@ int main(){
 
     bla.state_zero_random();
 
-    std::vector<float> svec0{0.2, 0.42, 0.42, 0.354, 0.456457, 0.98765, 0.1234, 0.2356, 0.2346, 0.234};
+    std::vector<float> svec0{1, 0.5, 0};
     bla2.state_zero_external(svec0);
 
     bla.store_random_state();
