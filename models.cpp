@@ -32,17 +32,21 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma):
     P = 0;
 }
 
+// Add the anti hebbian parameters to the class
 void rate::ItineratedMap::anti_hebb_param(float _tau, float eps){
     tau = _tau;
     epsilon = eps;
 }
 
+
+// Add the parameter gamma, for the map function
 void rate::ItineratedMap::model_param(float gma){
     gamma = gma;
 }
 
-void rate::ItineratedMap::store_random_state(){
 
+// Generates and stores a random state to the Patterns variable
+void rate::ItineratedMap::store_random_state(){
     //TODO: this snippet is used a lot throughout the code. Put it in a func
     std::random_device dev;
     dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
@@ -59,10 +63,13 @@ void rate::ItineratedMap::store_random_state(){
 
 }
 
+// Gets the mu patterns from Patterns, xi is the name given to the patterns
+// in the article.
 std::vector<float>& rate::ItineratedMap::get_xi(int u){
     return Patterns[u];
 }
 
+// Generates the initial state of the network as a random state
 void rate::ItineratedMap::state_zero_random(){
     std::random_device dev;
     dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
@@ -81,6 +88,8 @@ void rate::ItineratedMap::state_zero_random(){
     }
 }
 
+
+// The user provides the initial state.
 void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
     if(State.size() == 0){
         for(float &s0i : state0){
@@ -96,7 +105,7 @@ void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
     }
 }
 
-
+// Construct the hebbian part of J with the stored patterns. JHebbian is static
 void rate::ItineratedMap::make_JHebbian(){
     if(J_heb.size() == 0){
         for(std::vector<float>::size_type i = 0; i != N; ++i){
@@ -124,6 +133,7 @@ void rate::ItineratedMap::make_JHebbian(){
     }
 }
 
+// Sets the initial atate of the anti-Hebb matrix to zero, as is in the paper.
 void rate::ItineratedMap::anti_Hebb_init(){
     if(J_nheb.size() == 0){
         for(std::vector<float>::size_type i = 0; i != N; ++i){
@@ -140,6 +150,7 @@ void rate::ItineratedMap::anti_Hebb_init(){
     }
 }
 
+// Updates the anti-Hebb matrix
 void rate::ItineratedMap::anti_Hebb_update(){
     float aux1 = (1.0 - (1.0/tau));
     float aux2 = (epsilon/float(N));
@@ -160,7 +171,8 @@ void rate::ItineratedMap::activity_update(){
     }
 }
 
-// spiking models namespace
+/* ------------ spiking models namespace ------------ */
+
 void spiking::lif::hello(std::string msg){
     std::cout << msg << std::endl;
 }

@@ -11,7 +11,7 @@ namespace rate{
         /**
          * Generates a network of rate based neurons interacting in a
          * all to all network.
-         * Model from Kinouchi 2008
+         * Model from Kinouchi et. al. 2008
         */
         private:
             // network variables
