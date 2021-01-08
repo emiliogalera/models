@@ -64,6 +64,10 @@ namespace rate{
             //Update the activity vector of the network
             void activity_update();
 
+            //Update the state of the network
+            void state_update(); //without input
+            void state_update(std::vector<float>& input); //with input
+
             // Probe function
             std::vector<float>& get_xi(int u);
     };

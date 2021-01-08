@@ -2,6 +2,7 @@
 #include<iostream>
 #include<random>
 #include<vector>
+#include<cmath>
 #include "models.h"
 
 // The most simple constructor
@@ -161,6 +162,7 @@ void rate::ItineratedMap::anti_Hebb_update(){
     }
 }
 
+// The activity h(t) is a vector. Every element is updated
 void rate::ItineratedMap::activity_update(){
     for(std::vector<float>::size_type i = 0; i != N; ++i){
         float aux = 0.0;
@@ -168,6 +170,18 @@ void rate::ItineratedMap::activity_update(){
             aux += (J_heb[i][j] + J_nheb[i][j])*State[j];
         }
         h_vec[i] = aux;
+    }
+}
+
+void rate::ItineratedMap::state_update(){
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
+        State[i] = std::tanh(gamma*h_vec[i]);
+    }
+}
+
+void rate::ItineratedMap::state_update(std::vector<float>& input){
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
+        State[i] = std::tanh(gamma*h_vec[i] + input[i]);
     }
 }
 
