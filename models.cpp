@@ -5,7 +5,8 @@
 #include<cmath>
 #include "models.h"
 
-// The most simple constructor
+/* ------------ rate models namespace ------------ */
+
 rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), gamma(gma){
     std::random_device dev;
     eng.seed(dev());
@@ -16,8 +17,6 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), ga
 
 }
 
-// A constructor with a random initial state
-// Use with caution, it sets the the state of each element in the interval to a, b!
 rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma): N(n_elements), gamma(gma){
     std::random_device dev;
     eng.seed(dev());
@@ -33,24 +32,19 @@ rate::ItineratedMap::ItineratedMap(int n_elements, float a, float b, float gma):
     P = 0;
 }
 
-// Add the anti hebbian parameters to the class
 void rate::ItineratedMap::anti_hebb_param(float _tau, float eps){
     tau = _tau;
     epsilon = eps;
 }
 
-
-// Add the parameter gamma, for the map function
 void rate::ItineratedMap::model_param(float gma){
     gamma = gma;
 }
 
-
-// Generates and stores a random state to the Patterns variable
-void rate::ItineratedMap::store_random_state(){
+void rate::ItineratedMap::store_random_state(float a, float b){
     //TODO: this snippet is used a lot throughout the code. Put it in a func
     std::random_device dev;
-    dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
+    dist.param(std::uniform_real_distribution<float>::param_type(a, b));
     eng.seed(dev());
     dist.reset();
 
@@ -64,13 +58,45 @@ void rate::ItineratedMap::store_random_state(){
 
 }
 
-// Gets the mu patterns from Patterns, xi is the name given to the patterns
-// in the article.
+void rate::ItineratedMap::store_external_state(std::vector<float>& vec){
+    Patterns.insert(std::pair<int, std::vector<float>>(P, vec)); //TODO: verify if deleting vec in main deletes the pattern!
+    ++P;
+}
+
+void rate::ItineratedMap::store_pmone_random_state(float prob){
+    std::random_device dev;
+    dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
+    eng.seed(dev());
+    dist.reset();
+
+    std::vector<float> xi;
+    for(std::vector<float>::size_type i = 0; i != N; ++i){
+        if(dist(eng) < prob){
+            xi.push_back(1.0);
+        }
+        else{
+            xi.push_back(-1.0);
+        }
+    }
+    Patterns.insert(std::pair<int, std::vector<float>>(P, xi));
+    ++P;
+}
+
 std::vector<float>& rate::ItineratedMap::get_xi(int u){
     return Patterns[u];
 }
 
-// Generates the initial state of the network as a random state
+std::vector<float>& rate::ItineratedMap::get_State(){
+    return State;
+}
+
+std::vector<float>& rate::ItineratedMap::get_activity(){
+    return h_vec;
+}
+std::vector<std::vector<float>>& rate::ItineratedMap::get_hebb(){
+    return J_heb;
+}
+
 void rate::ItineratedMap::state_zero_random(){
     std::random_device dev;
     dist.param(std::uniform_real_distribution<float>::param_type(0.0, 1.0));
@@ -89,8 +115,6 @@ void rate::ItineratedMap::state_zero_random(){
     }
 }
 
-
-// The user provides the initial state.
 void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
     if(State.size() == 0){
         for(float &s0i : state0){
@@ -106,7 +130,6 @@ void rate::ItineratedMap::state_zero_external(std::vector<float> &state0){
     }
 }
 
-// Construct the hebbian part of J with the stored patterns. JHebbian is static
 void rate::ItineratedMap::make_JHebbian(){
     if(J_heb.size() == 0){
         for(std::vector<float>::size_type i = 0; i != N; ++i){
@@ -115,6 +138,9 @@ void rate::ItineratedMap::make_JHebbian(){
                 float aux = 0.0;
                 for(int u = 0; u != P; ++u){
                     aux += Patterns[u][i]*Patterns[u][j];
+                }
+                if(i == j){
+                    aux = 0.0;
                 }
                 Jihebb.push_back(aux/float(N)); //TODO: ask Osame if this normalization is correct. It seems off...
             }
@@ -134,7 +160,6 @@ void rate::ItineratedMap::make_JHebbian(){
     }
 }
 
-// Sets the initial atate of the anti-Hebb matrix to zero, as is in the paper.
 void rate::ItineratedMap::anti_Hebb_init(){
     if(J_nheb.size() == 0){
         for(std::vector<float>::size_type i = 0; i != N; ++i){
@@ -151,7 +176,6 @@ void rate::ItineratedMap::anti_Hebb_init(){
     }
 }
 
-// Updates the anti-Hebb matrix
 void rate::ItineratedMap::anti_Hebb_update(){
     float aux1 = (1.0 - (1.0/tau));
     float aux2 = (epsilon/float(N));
@@ -162,7 +186,6 @@ void rate::ItineratedMap::anti_Hebb_update(){
     }
 }
 
-// The activity h(t) is a vector. Every element is updated
 void rate::ItineratedMap::activity_update(){
     for(std::vector<float>::size_type i = 0; i != N; ++i){
         float aux = 0.0;
