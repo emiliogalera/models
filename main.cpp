@@ -4,9 +4,12 @@
 
 int main(){
 
-    // create a network with 5 elements.
-    rate::ItineratedMap bla2;
-    bla2.Hello();
+    rate::parameters simu_par;
+    simu_par.epsilon = 0.009;
+    simu_par.gamma = 10.0;
+    simu_par.tau = 600.0;
+    simu_par.N = 100;
+    rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
     /*bla2.state_zero_random(); //creates the initial state of the netw
 

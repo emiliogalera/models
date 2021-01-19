@@ -6,8 +6,33 @@
 #include "models.h"
 
 /* ------------ rate models namespace ------------ */
-void rate::ItineratedMap::Hello(){
-    std::cout << "Hello world" << std::endl;
+// Constructor of the ItineratedMap class
+// Initiate the state vector with random values in the range (a, b)
+rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
+    prepare_random_device(a, b);
+    net_par = par; //TODO: see if this works after par is deleted in main.
+
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        state_var.s_vec.push_back(draw());
+        state_var.h_vec.push_back(0.0);
+        std::vector<float> dummy(net_par.N, 0.0);
+        state_var.Hebb_matrix.push_back(dummy);
+        state_var.antiHebb_matrix.push_back(dummy);
+    }
+}
+
+// Prepares the random number generator
+void rate::ItineratedMap::prepare_random_device(float a, float b){
+    std::random_device dev;
+    device.eng.seed(dev());
+    device.dist.param(std::uniform_real_distribution<float>::param_type(a, b));
+    device.dist.reset();
+}
+
+// draws a random number from the prepared distribution.
+// Always prepare the distribution before drawing from it.
+float rate::ItineratedMap::draw(){
+    return device.dist(device.eng);
 }
 /*
 rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), gamma(gma){

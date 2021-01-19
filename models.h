@@ -8,10 +8,10 @@
 
 namespace rate{
     struct parameters{
-        std::vector<float>::size_type _N;
-        float _gamma;
-        float _tau;
-        float _epsilon;
+        std::vector<float>::size_type N;
+        float gamma;
+        float tau;
+        float epsilon;
     };
 
     struct network_var{
@@ -45,9 +45,15 @@ namespace rate{
             // random device
             random_device device;
 
+            // prepares the random device
+            void prepare_random_device(float a, float b);
+
+            //Draws from the distribution
+            float draw();
+
         public:
-            void Hello();
             // Constructors
+            ItineratedMap(parameters& par, float a, float b);
             /*ItineratedMap(int n_elements, float gma);
             ItineratedMap(int n_elements, float a, float b, float gma);
 
