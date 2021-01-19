@@ -6,7 +6,10 @@
 #include "models.h"
 
 /* ------------ rate models namespace ------------ */
-
+void rate::ItineratedMap::Hello(){
+    std::cout << "Hello world" << std::endl;
+}
+/*
 rate::ItineratedMap::ItineratedMap(int n_elements, float gma): N(n_elements), gamma(gma){
     std::random_device dev;
     eng.seed(dev());
@@ -207,7 +210,7 @@ void rate::ItineratedMap::state_update(std::vector<float>& input){
         State[i] = std::tanh(gamma*h_vec[i] + input[i]);
     }
 }
-
+*/
 /* ------------ spiking models namespace ------------ */
 
 void spiking::lif::hello(std::string msg){

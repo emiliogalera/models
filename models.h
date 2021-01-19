@@ -7,6 +7,28 @@
 #include<map>
 
 namespace rate{
+    struct parameters{
+        std::vector<float>::size_type _N;
+        float _gamma;
+        float _tau;
+        float _epsilon;
+    };
+
+    struct network_var{
+        std::vector<float> s_vec;
+        std::vector<float> h_vec;
+
+        std::vector<std::vector<float>> P_matrix;
+        std::vector<std::vector<float>> Hebb_matrix;
+        std::vector<std::vector<float>> antiHebb_matrix;
+    };
+
+    struct random_device{
+        std::mt19937 eng; //random number engine. Needs a seed (random device)
+        std::uniform_real_distribution<float> dist; // distribution used for random process
+    };
+
+
     class ItineratedMap{
         /**
          * Generates a network of rate based neurons interacting in a
@@ -14,27 +36,19 @@ namespace rate{
          * Model from Kinouchi et. al. 2008
         */
         private:
+            //parameters
+            parameters net_par;
+
             // network variables
-            std::vector<float>::size_type N; // number of elements in the system
-            int P; // number of patterns stored in the system
-            float gamma; // state update parameter
+            network_var state_var;
 
-            std::mt19937 eng; //random number engine. Needs a seed (random device)
-            std::uniform_real_distribution<float> dist; // distribution used for random process
+            // random device
+            random_device device;
 
-            std::vector<float> State; // Current state vector
-            std::map<int, std::vector<float>> Patterns; // pattern container
-
-            std::vector<std::vector<float>> J_heb; // Hebbian part of the connection matrix
-            std::vector<std::vector<float>> J_nheb; // Anti-hebbian of the connection matrix
-            std::vector<float> h_vec; //activity vector, this vector stores the activity of every unit in that instant
-            float epsilon; //anti-hebbian dynamic parameter
-            float tau; //anti-hebbian dynamic parameter
-
-            //void tanh();
         public:
+            void Hello();
             // Constructors
-            ItineratedMap(int n_elements, float gma);
+            /*ItineratedMap(int n_elements, float gma);
             ItineratedMap(int n_elements, float a, float b, float gma);
 
             // Define the parameters for the connection matrix (anti-hebbian term)
@@ -81,6 +95,7 @@ namespace rate{
 
             //Probe Hebb matrix
             std::vector<std::vector<float>>& get_hebb();
+        */
 
     };
 }

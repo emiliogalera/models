@@ -5,9 +5,10 @@
 int main(){
 
     // create a network with 5 elements.
-    rate::ItineratedMap bla2(50, 0.1, 1.0, 10.0);
+    rate::ItineratedMap bla2;
+    bla2.Hello();
 
-    bla2.state_zero_random(); //creates the initial state of the netw
+    /*bla2.state_zero_random(); //creates the initial state of the netw
 
     // adds a random state
     //bla2.store_external_state(vec0);
@@ -109,6 +110,6 @@ int main(){
         }
         std::cout << ss << " ";
     }
-    std::cout << std::endl;
+    std::cout << std::endl;*/
     return 0;
 }
