@@ -21,6 +21,36 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     }
 }
 
+void rate::ItineratedMap::add_random_pattern(float prob){
+    prepare_random_device(0.0, 1.0);
+    std::vector<float> xi_u;
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        if(draw() < prob){
+            xi_u.push_back(1.0);
+        }
+        else{
+            xi_u.push_back(-1.0);
+        }
+    }
+    state_var.P_matrix.push_back(xi_u);
+}
+
+void rate::ItineratedMap::make_hebb_matrix(){
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+            float aux = 0.0;
+            if(i != j){
+                for(std::vector<std::vector<float>>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
+                    aux += state_var.P_matrix[u][i]*state_var.P_matrix[u][j];
+                }
+            }
+            state_var.Hebb_matrix[i][j] = aux/float(net_par.N);
+        }
+    }
+}
+
+/*---- Private methods ----*/
+
 // Prepares the random number generator
 void rate::ItineratedMap::prepare_random_device(float a, float b){
     std::random_device dev;

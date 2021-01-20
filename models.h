@@ -54,6 +54,14 @@ namespace rate{
         public:
             // Constructors
             ItineratedMap(parameters& par, float a, float b);
+
+            // Stores a random pattern, where xi in [-1, 1].
+            void add_random_pattern(float prob);
+
+            // Generates the Hebbian matrix part of the connection
+            void make_hebb_matrix();
+
+
             /*ItineratedMap(int n_elements, float gma);
             ItineratedMap(int n_elements, float a, float b, float gma);
 

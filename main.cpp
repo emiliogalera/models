@@ -11,6 +11,9 @@ int main(){
     simu_par.N = 100;
     rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
+    bla2.add_random_pattern(0.5);
+    bla2.make_hebb_matrix();
+
     /*bla2.state_zero_random(); //creates the initial state of the netw
 
     // adds a random state
