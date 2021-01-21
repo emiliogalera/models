@@ -7,6 +7,12 @@
 #include<map>
 
 namespace rate{
+    /* Group the parameters of the model:
+     * N = size of the network
+     * gamma = gain parameter of the state map function
+     * tau = characteristic time of the anti-hebbian dynamics
+     * epsilon = equilibrium term of the anti-hebbian dynamics
+     */
     struct parameters{
         std::vector<float>::size_type N;
         float gamma;
@@ -14,6 +20,16 @@ namespace rate{
         float epsilon;
     };
 
+    /* Group the network vectors and matrix variables
+     * s_vec = state vector of the model
+     * h_vec = activity of the network
+     * P_matrix = matrix that stores patterns to be imprinted in the
+     * connections of the network by the hebbian dynamics
+     * Hebb_matrix = static part of the connection matrix, based on
+     * hebbian learning.
+     * antiHebb_matrix = dynamic part of the connection matrix, anti-learning
+     * dynamics used to temporarily destabilise attractors created by Hebbian learning
+     */
     struct network_var{
         std::vector<float> s_vec;
         std::vector<float> h_vec;
@@ -23,6 +39,11 @@ namespace rate{
         std::vector<std::vector<float>> antiHebb_matrix;
     };
 
+    /* Group the variables responsible for the random number generators
+     * eng = Egine used to generate randomness
+     * dist = Distribution used to draw random numbers, for now it uses a
+     * uniform distribution
+     */
     struct random_device{
         std::mt19937 eng; //random number engine. Needs a seed (random device)
         std::uniform_real_distribution<float> dist; // distribution used for random process
@@ -52,7 +73,8 @@ namespace rate{
             float draw();
 
         public:
-            // Constructors
+            // Constructor of the ItineratedMap class
+            // Initiate the state vector with random values in the range (a, b)
             ItineratedMap(parameters& par, float a, float b);
 
             // Stores a random pattern, where xi in [-1, 1].
@@ -60,6 +82,23 @@ namespace rate{
 
             // Generates the Hebbian matrix part of the connection
             void make_hebb_matrix();
+
+            /*---- Probing methods ----*/
+            /*---- These methods return references, be careful! ----*/
+            // Get pattern by index mu
+            std::vector<float>& get_xi(int u);
+
+            //Probe state vector;
+            std::vector<float>& get_State();
+
+            //Probe activity
+            std::vector<float>& get_activity();
+
+            //Probe Hebb matrix
+            std::vector<std::vector<float>>& get_hebb();
+
+            //Probe antiHebb matrix
+            std::vector<std::vector<float>>& get_antihebb();
 
 
             /*ItineratedMap(int n_elements, float gma);

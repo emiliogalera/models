@@ -14,6 +14,11 @@ int main(){
     bla2.add_random_pattern(0.5);
     bla2.make_hebb_matrix();
 
+    const std::vector<float>& s_vec_ref = bla2.get_State();
+    const std::vector<float>& h_vec_ref = bla2.get_activity();
+    const std::vector<float>& pattern_ref = bla2.get_xi(0);
+    const std::vector<std::vector<float>>& Hebb_ref = bla2.get_hebb();
+    const std::vector<std::vector<float>>& antiHebb_ref = bla2.get_antihebb();
     /*bla2.state_zero_random(); //creates the initial state of the netw
 
     // adds a random state

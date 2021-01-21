@@ -6,8 +6,6 @@
 #include "models.h"
 
 /* ------------ rate models namespace ------------ */
-// Constructor of the ItineratedMap class
-// Initiate the state vector with random values in the range (a, b)
 rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     prepare_random_device(a, b);
     net_par = par; //TODO: see if this works after par is deleted in main.
@@ -49,8 +47,27 @@ void rate::ItineratedMap::make_hebb_matrix(){
     }
 }
 
-/*---- Private methods ----*/
+/*---- Probing methods ----*/
+std::vector<float>& rate::ItineratedMap::get_xi(int u){
+    return state_var.P_matrix[u];
+}
 
+std::vector<float>& rate::ItineratedMap::get_State(){
+    return state_var.s_vec;
+}
+
+std::vector<float>& rate::ItineratedMap::get_activity(){
+    return state_var.h_vec;
+}
+std::vector<std::vector<float>>& rate::ItineratedMap::get_hebb(){
+    return state_var.Hebb_matrix;
+}
+
+std::vector<std::vector<float>>& rate::ItineratedMap::get_antihebb(){
+    return state_var.antiHebb_matrix;
+}
+
+/*---- Private methods ----*/
 // Prepares the random number generator
 void rate::ItineratedMap::prepare_random_device(float a, float b){
     std::random_device dev;
