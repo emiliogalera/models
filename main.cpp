@@ -2,6 +2,23 @@
 #include<vector>
 #include "models.h"
 
+void print_var(const std::vector<float>& vec){
+    for(float si : vec){
+            std::cout << si << " ";
+    }
+    std::cout << std::endl;
+}
+
+void print_var(const std::vector<std::vector<float>>& vec){
+    for(std::vector<float> lin : vec){
+        for(float& si : lin){
+            std::cout << si << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 int main(){
 
     rate::parameters simu_par;
@@ -12,6 +29,7 @@ int main(){
     rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
     bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.9);
     bla2.make_hebb_matrix();
 
     const std::vector<float>& s_vec_ref = bla2.get_State();
@@ -19,108 +37,45 @@ int main(){
     const std::vector<float>& pattern_ref = bla2.get_xi(0);
     const std::vector<std::vector<float>>& Hebb_ref = bla2.get_hebb();
     const std::vector<std::vector<float>>& antiHebb_ref = bla2.get_antihebb();
-    /*bla2.state_zero_random(); //creates the initial state of the netw
 
-    // adds a random state
-    //bla2.store_external_state(vec0);
-    bla2.store_random_state(-1.0, 1.0);
-    bla2.store_random_state(-1.0, 1.0);
-    bla2.anti_hebb_param(600.0, 0.009);
-    //bla2.store_pmone_random_state(0.5);
-    bla2.make_JHebbian(); // make the Hebbian matrix based on this single state
-    std::cout << "This is the Hebbian connection matrix" << std::endl;
-    for(std::vector<float> &vi : bla2.get_hebb()){
-        for(float &si : vi){
-            std::cout << si << " ";
-        }
-        std::cout << std::endl;
-    }
+    std::cout << "Hebbian matrix:" << std::endl;
+    print_var(Hebb_ref);
     std::cout << std::endl;
-    bla2.anti_Hebb_init();
-    for(float &si : bla2.get_State()){
-            std::cout << si << " ";
-        }
+
+    std::cout << "Printing State vector:" << std::endl;
+    print_var(s_vec_ref);
     std::cout << std::endl;
-    for(float &si : bla2.get_activity()){
-            std::cout << si << " ";
-        }
+
+    std::cout << "Printing pattern:" << std::endl;
+    print_var(pattern_ref);
+    std::cout << std::endl;
+
+    std::cout << "Initiating activity vector h(t):" << std::endl;
+    print_var(h_vec_ref);
     std::cout << std::endl;
     bla2.activity_update();
-    for(float &si : bla2.get_activity()){
-            std::cout << si << " ";
-        }
-    std::cout << std::endl;
-    std::cout << "Stored state:" << std::endl;
-    for(float &xi_i : bla2.get_xi(0)){
-        std::cout << xi_i << " ";
-    }
+
+    std::cout << "Activity updated:" << std::endl;
+    print_var(h_vec_ref);
     std::cout << std::endl;
 
-    std::cout << "Let's start the dynamics!\nThis first example does not have a anti-Hebb term" << std::endl;
-
-    int TIME_ITER = 55;
-    for(int t = 0; t != TIME_ITER; ++t){
-        bla2.state_update();
-        bla2.anti_Hebb_update();
-        std::cout << "time step: State " << t << " --- ";
-        for(float &si : bla2.get_State()){
-            int ss;
-            if(si < 0.0){
-                ss = -1;
-            }
-            else if(si >= 0.0){
-                ss = 1;
-            }
-            std::cout << ss << " ";
-        }
-        std::cout << std::endl;
-
+    int TIMER = 50;
+    std::cout << "Initiating dynamics for" << TIMER << " time steps:" << std::endl;
+    std::vector<float> m_vec;
+    for(int t = 0; t != TIMER; ++t){
+        //bla2.antiHebb_update(); !!! First, no anti-Hebbian matrix update
+        bla2.state_update_tgh();
         bla2.activity_update();
-        std::cout << "time step: activity " << t << " --- ";
-        for(float &si : bla2.get_activity()){
-            std::cout << si << " ";
+        bla2.generate_m(m_vec);
+        for(float& mu : m_vec){
+            std::cout << mu << " ";
         }
         std::cout << std::endl;
-        std::cout << std::endl;
-
     }
 
-    std::cout << "corrent state: ";
-    for(float &si : bla2.get_State()){
-        int ss;
-        if(si < 0.0){
-            ss = -1;
-        }
-        else if(si >= 0.0){
-            ss = 1;
-        }
-        std::cout << ss << " ";
-    }
+    std::cout << "State :" << std::endl;
+    print_var(s_vec_ref);
     std::cout << std::endl;
 
-    std::cout << "stored state 0:  ";
-    for(float &si : bla2.get_xi(0)){
-        int ss;
-        if(si < 0.0){
-            ss = -1;
-        }
-        else if(si >= 0.0){
-            ss = 1;
-        }
-        std::cout << ss << " ";
-    }
-    std::cout << std::endl;
-    std::cout << "stored state 1:  ";
-    for(float &si : bla2.get_xi(1)){
-        int ss;
-        if(si < 0.0){
-            ss = -1;
-        }
-        else if(si >= 0.0){
-            ss = 1;
-        }
-        std::cout << ss << " ";
-    }
-    std::cout << std::endl;*/
     return 0;
 }

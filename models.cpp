@@ -8,7 +8,13 @@
 /* ------------ rate models namespace ------------ */
 rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     prepare_random_device(a, b);
-    net_par = par; //TODO: see if this works after par is deleted in main.
+
+    // IMPORTANT: in the constructor, epsilon and tau are already in the
+    // dynamics form.
+    net_par.N = par.N;
+    net_par.gamma = par.gamma;
+    net_par.epsilon = par.epsilon/float(par.N);
+    net_par.tau = (1.0 - (1.0/par.tau));
 
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec.push_back(draw());
@@ -65,6 +71,54 @@ std::vector<std::vector<float>>& rate::ItineratedMap::get_hebb(){
 
 std::vector<std::vector<float>>& rate::ItineratedMap::get_antihebb(){
     return state_var.antiHebb_matrix;
+}
+
+void rate::ItineratedMap::generate_m(std::vector<float>& m_recipient){
+    if(!m_recipient.empty()){
+        m_recipient.clear();
+    }
+    float mod_state = 0.0;
+    for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+        mod_state += state_var.s_vec[j]*state_var.s_vec[j];
+    }
+    for(std::vector<float>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
+        float prod = 0.0;
+        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+            prod += state_var.s_vec[j]*state_var.P_matrix[u][j];
+        }
+        m_recipient.push_back(prod/(std::sqrt(mod_state)*std::sqrt(float(net_par.N))));
+    }
+}
+
+/*---- Update methods ----*/
+void rate::ItineratedMap::activity_update(){
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        float aux = 0.0;
+        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+            aux += (state_var.Hebb_matrix[i][j] + state_var.antiHebb_matrix[i][j])*state_var.s_vec[j];
+        }
+        state_var.h_vec[i] = aux;
+    }
+}
+
+void rate::ItineratedMap::state_update_tgh(){
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        state_var.s_vec[i] = std::tanh(net_par.gamma*state_var.h_vec[i]);
+    }
+}
+
+void rate::ItineratedMap::state_update_tgh(std::vector<float>& input){
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        state_var.s_vec[i] = std::tanh(net_par.gamma*state_var.h_vec[i] + input[i]);
+    }
+}
+
+void rate::ItineratedMap::antiHebb_update(){
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+            state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.epsilon*(state_var.s_vec[i]*state_var.s_vec[j]));
+        }
+    }
 }
 
 /*---- Private methods ----*/

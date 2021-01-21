@@ -10,8 +10,8 @@ namespace rate{
     /* Group the parameters of the model:
      * N = size of the network
      * gamma = gain parameter of the state map function
-     * tau = characteristic time of the anti-hebbian dynamics
-     * epsilon = equilibrium term of the anti-hebbian dynamics
+     * tau = characteristic time of the anti-hebbian dynamics ***stores 1-1/t
+     * epsilon = equilibrium term of the anti-hebbian dynamics ***stores e/N
      */
     struct parameters{
         std::vector<float>::size_type N;
@@ -99,6 +99,21 @@ namespace rate{
 
             //Probe antiHebb matrix
             std::vector<std::vector<float>>& get_antihebb();
+
+            // Generate m_vector of projection of the current state on to stored
+            //patterns
+            void generate_m(std::vector<float>& m_recipient);
+
+            /*---- Update methods ----*/
+            //Update the activity vector of the network h(t)
+            void activity_update();
+
+            //Update the state of the network
+            void state_update_tgh(); //without input
+            void state_update_tgh(std::vector<float>& input); //with input
+
+            //Update the anti-Hebbian matrix
+            void antiHebb_update();
 
 
             /*ItineratedMap(int n_elements, float gma);
