@@ -29,41 +29,50 @@ int main(){
     rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
     bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.9);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5);
+
     bla2.make_hebb_matrix();
 
-    const std::vector<float>& s_vec_ref = bla2.get_State();
-    const std::vector<float>& h_vec_ref = bla2.get_activity();
-    const std::vector<float>& pattern_ref = bla2.get_xi(0);
-    const std::vector<std::vector<float>>& Hebb_ref = bla2.get_hebb();
-    const std::vector<std::vector<float>>& antiHebb_ref = bla2.get_antihebb();
+    //const std::vector<float>& s_vec_ref = bla2.get_State();
+    //const std::vector<float>& h_vec_ref = bla2.get_activity();
+    //const std::vector<float>& pattern_ref = bla2.get_xi(0);
+    //const std::vector<std::vector<float>>& Hebb_ref = bla2.get_hebb();
+    //const std::vector<std::vector<float>>& antiHebb_ref = bla2.get_antihebb();
 
-    std::cout << "Hebbian matrix:" << std::endl;
-    print_var(Hebb_ref);
-    std::cout << std::endl;
+    //std::cout << "Hebbian matrix:" << std::endl;
+    //print_var(Hebb_ref);
+    //std::cout << std::endl;
 
-    std::cout << "Printing State vector:" << std::endl;
-    print_var(s_vec_ref);
-    std::cout << std::endl;
+    //std::cout << "Printing State vector:" << std::endl;
+    //print_var(s_vec_ref);
+    //std::cout << std::endl;
 
-    std::cout << "Printing pattern:" << std::endl;
-    print_var(pattern_ref);
-    std::cout << std::endl;
+    //std::cout << "Printing pattern:" << std::endl;
+    //print_var(pattern_ref);
+    //std::cout << std::endl;
 
-    std::cout << "Initiating activity vector h(t):" << std::endl;
-    print_var(h_vec_ref);
-    std::cout << std::endl;
+    //std::cout << "Initiating activity vector h(t):" << std::endl;
+    //print_var(h_vec_ref);
+    //std::cout << std::endl;
     bla2.activity_update();
 
-    std::cout << "Activity updated:" << std::endl;
-    print_var(h_vec_ref);
-    std::cout << std::endl;
+    //std::cout << "Activity updated:" << std::endl;
+    //print_var(h_vec_ref);
+    //std::cout << std::endl;
 
-    int TIMER = 50;
-    std::cout << "Initiating dynamics for" << TIMER << " time steps:" << std::endl;
+    int TIMER = 15000;
+    //std::cout << "Initiating dynamics for" << TIMER << " time steps:" << std::endl;
     std::vector<float> m_vec;
     for(int t = 0; t != TIMER; ++t){
-        //bla2.antiHebb_update(); !!! First, no anti-Hebbian matrix update
+        bla2.antiHebb_update();
         bla2.state_update_tgh();
         bla2.activity_update();
         bla2.generate_m(m_vec);
@@ -73,9 +82,9 @@ int main(){
         std::cout << std::endl;
     }
 
-    std::cout << "State :" << std::endl;
-    print_var(s_vec_ref);
-    std::cout << std::endl;
+    //std::cout << "State :" << std::endl;
+    //print_var(s_vec_ref);
+    //std::cout << std::endl;
 
     return 0;
 }
