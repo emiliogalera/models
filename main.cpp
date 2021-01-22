@@ -62,7 +62,8 @@ int main(){
     // Simple simulation scheme
     for(int t = 0; t != TIMER; ++t){
         bla2.antiHebb_update();
-        bla2.state_update_tgh();
+        //bla2.state_update_tgh();
+        bla2.state_update_rational();
         bla2.activity_update();
         bla2.generate_m(m_vec);
         for(float& mu : m_vec){

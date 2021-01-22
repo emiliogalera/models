@@ -112,6 +112,9 @@ namespace rate{
             void state_update_tgh(); //without input
             void state_update_tgh(std::vector<float>& input); //with input
 
+            void state_update_rational(); //without input
+            void state_update_rational(std::vector<float>& input); //with input
+
             //Update the anti-Hebbian matrix
             void antiHebb_update();
 

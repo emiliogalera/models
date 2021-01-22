@@ -113,6 +113,22 @@ void rate::ItineratedMap::state_update_tgh(std::vector<float>& input){
     }
 }
 
+void rate::ItineratedMap::state_update_rational(){
+    float x;
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        x = net_par.gamma*state_var.h_vec[i];
+        state_var.s_vec[i] = x/(1.0 + std::abs(x));
+    }
+}
+
+void rate::ItineratedMap::state_update_rational(std::vector<float>& input){
+    float x;
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        x = (net_par.gamma*state_var.h_vec[i]) + input[i];
+        state_var.s_vec[i] = x/(1.0 + std::abs(x));
+    }
+}
+
 void rate::ItineratedMap::antiHebb_update(){
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
