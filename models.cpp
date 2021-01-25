@@ -142,7 +142,12 @@ void rate::ItineratedMap::antiHebb_update(){
 }
 
 void rate::ItineratedMap::hebb_update(){
-    std::cout << "Not implemented yet!" << std::endl;
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+            //state_var.Hebb_matrix = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
+            state_var.Hebb_matrix[i][j] = state_var.Hebb_matrix[i][j] - (net_par.eps_h*state_var.s_vec[i]*state_var.s_vec[j]);
+        }
+    }
 }
 
 /*---- Private methods ----*/
