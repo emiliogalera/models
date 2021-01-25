@@ -58,7 +58,14 @@ namespace rate{
         /**
          * Generates a network of rate based neurons interacting in a
          * all to all network.
-         * Model from Kinouchi et. al. 2008
+         * This model is a fusion from Kinouchi et. al. 2008 and Kinouchi & Kinouchi 2002
+         * Addaptations:
+         * - Fast dynamics in Kinouchi 2002 is the anti-Hebbian dynamics from 2008
+         * eta_f = eps/N
+         * - Slow dynamics in 2002 acts on the static hebbian matrix from the 2008 paper.
+         * - There is no correspondency for tau in the slow dynamics between the two papers,
+         * assuming tau_s -> \infity
+         * - TODO: ask osame if we should put a tau_s >> tau_f, so unlearning will not be permanent.
         */
         private:
             //parameters
