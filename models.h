@@ -17,7 +17,8 @@ namespace rate{
         std::vector<float>::size_type N;
         float gamma;
         float tau;
-        float epsilon;
+        float eps_ah;
+        float eps_h;
     };
 
     /* Group the network vectors and matrix variables
@@ -120,6 +121,10 @@ namespace rate{
 
             //Update the anti-Hebbian matrix
             void antiHebb_update();
+
+            // Hebbian dynamics, based on the slow synaptic synamics in Kinouchi2002
+            void hebb_update();
+
 
     };
 }

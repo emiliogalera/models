@@ -13,7 +13,8 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     // dynamics form.
     net_par.N = par.N;
     net_par.gamma = par.gamma;
-    net_par.epsilon = par.epsilon/float(par.N);
+    net_par.eps_ah = par.eps_ah/float(par.N);
+    net_par.eps_h = par.eps_h/float(par.N);
     net_par.tau = (1.0 - (1.0/par.tau));
 
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
@@ -135,9 +136,13 @@ void rate::ItineratedMap::state_update_rational(std::vector<float>& input){
 void rate::ItineratedMap::antiHebb_update(){
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
-            state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.epsilon*(state_var.s_vec[i]*state_var.s_vec[j]));
+            state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
         }
     }
+}
+
+void rate::ItineratedMap::hebb_update(){
+    std::cout << "Not implemented yet!" << std::endl;
 }
 
 /*---- Private methods ----*/

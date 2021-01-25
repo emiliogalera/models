@@ -25,7 +25,8 @@ int main(){
 
     // Create a parameter variable for simulation
     rate::parameters simu_par;
-    simu_par.epsilon = 0.009;
+    simu_par.eps_ah = 0.009;
+    simu_par.eps_h = 0.0009;
     simu_par.gamma = 10.0;
     simu_par.tau = 600.0;
     simu_par.N = 100;
