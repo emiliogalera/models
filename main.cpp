@@ -35,16 +35,16 @@ int main(){
     rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
     // Stores 10 random patterns
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
-    bla2.add_random_pattern(0.5);
+    bla2.add_random_pattern(0.5, 1.5);
+    bla2.add_random_pattern(0.5, 1.5);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
+    bla2.add_random_pattern(0.5, 1.0);
 
     // Make the hebbian matrix based on the stored patterns
     bla2.make_hebb_matrix();

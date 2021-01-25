@@ -23,6 +23,8 @@ namespace rate{
     /* Group the network vectors and matrix variables
      * s_vec = state vector of the model
      * h_vec = activity of the network
+     * f_vec = weight of a pattern from the P_matrix
+     *
      * P_matrix = matrix that stores patterns to be imprinted in the
      * connections of the network by the hebbian dynamics
      * Hebb_matrix = static part of the connection matrix, based on
@@ -33,6 +35,7 @@ namespace rate{
     struct network_var{
         std::vector<float> s_vec;
         std::vector<float> h_vec;
+        std::vector<float> f_vec;
 
         std::vector<std::vector<float>> P_matrix;
         std::vector<std::vector<float>> Hebb_matrix;
@@ -78,7 +81,7 @@ namespace rate{
             ItineratedMap(parameters& par, float a, float b);
 
             // Stores a random pattern, where xi in [-1, 1].
-            void add_random_pattern(float prob);
+            void add_random_pattern(float prob, float strength);
 
             // Generates the Hebbian matrix part of the connection
             void make_hebb_matrix();

@@ -25,7 +25,7 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     }
 }
 
-void rate::ItineratedMap::add_random_pattern(float prob){
+void rate::ItineratedMap::add_random_pattern(float prob, float strength){
     prepare_random_device(0.0, 1.0);
     std::vector<float> xi_u;
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
@@ -37,6 +37,7 @@ void rate::ItineratedMap::add_random_pattern(float prob){
         }
     }
     state_var.P_matrix.push_back(xi_u);
+    state_var.f_vec.push_back(strength);
 }
 
 void rate::ItineratedMap::make_hebb_matrix(){
@@ -45,10 +46,12 @@ void rate::ItineratedMap::make_hebb_matrix(){
             float aux = 0.0;
             if(i != j){
                 for(std::vector<std::vector<float>>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
-                    aux += state_var.P_matrix[u][i]*state_var.P_matrix[u][j];
+                    aux += state_var.f_vec[u]*state_var.P_matrix[u][i]*state_var.P_matrix[u][j];
                 }
             }
-            state_var.Hebb_matrix[i][j] = aux/float(net_par.N);
+            //TODO: Ask Osame if the normalization is ok.
+            state_var.Hebb_matrix[i][j] = aux/(float(net_par.N)*float(state_var.P_matrix.size()));
+            //state_var.Hebb_matrix[i][j] = aux/(float(net_par.N));
         }
     }
 }
