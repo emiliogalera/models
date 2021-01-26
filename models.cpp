@@ -17,10 +17,10 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     net_par.eps_h = par.eps_h/float(par.N);
     net_par.tau = (1.0 - (1.0/par.tau));
 
+    std::vector<float> dummy(net_par.N, 0.0);
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec.push_back(draw());
         state_var.h_vec.push_back(0.0);
-        std::vector<float> dummy(net_par.N, 0.0);
         state_var.Hebb_matrix.push_back(dummy);
         state_var.antiHebb_matrix.push_back(dummy);
     }
@@ -136,7 +136,8 @@ void rate::ItineratedMap::state_update_rational(std::vector<float>& input){
 void rate::ItineratedMap::antiHebb_update(){
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
-            state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
+            //state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
+            state_var.antiHebb_matrix[i][j] = (i == j) ? 0.0 : ((net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j])));
         }
     }
 }
@@ -144,8 +145,8 @@ void rate::ItineratedMap::antiHebb_update(){
 void rate::ItineratedMap::hebb_update(){
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
-            //state_var.Hebb_matrix = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
-            state_var.Hebb_matrix[i][j] = state_var.Hebb_matrix[i][j] - (net_par.eps_h*state_var.s_vec[i]*state_var.s_vec[j]);
+            //state_var.Hebb_matrix[i][j] = state_var.Hebb_matrix[i][j] - (net_par.eps_h*(state_var.s_vec[i]*state_var.s_vec[j]));
+            state_var.Hebb_matrix[i][j] = (i == j) ? 0.0 : (state_var.Hebb_matrix[i][j] - (net_par.eps_h*state_var.s_vec[i]*state_var.s_vec[j]));
         }
     }
 }

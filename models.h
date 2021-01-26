@@ -126,6 +126,9 @@ namespace rate{
             void state_update_rational(); //without input
             void state_update_rational(std::vector<float>& input); //with input
 
+            // IMPORTANT: both connection matrices don't considere self-connections
+            // Jii = 0, in hebb_update and antiHebb_update
+
             //Update the anti-Hebbian matrix
             void antiHebb_update();
 

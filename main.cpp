@@ -25,10 +25,10 @@ int main(){
 
     // Create a parameter variable for simulation
     rate::parameters simu_par;
-    simu_par.eps_ah = 0.009;
-    simu_par.eps_h = 0.0009;
+    simu_par.eps_ah = 0.02;
+    simu_par.eps_h = 0.001;
     simu_par.gamma = 10.0;
-    simu_par.tau = 600.0;
+    simu_par.tau = 100.0;
     simu_par.N = 100;
 
     // Instanciate a ItineratedMap object with an initial state
@@ -36,16 +36,16 @@ int main(){
     rate::ItineratedMap bla2(simu_par, -1.0, 1.0);
 
     // Stores 10 random patterns
-    bla2.add_random_pattern(0.5, 1.5);
-    bla2.add_random_pattern(0.5, 1.5);
+    bla2.add_random_pattern(0.5, 3.0);
+    bla2.add_random_pattern(0.5, 3.0);
+    bla2.add_random_pattern(0.5, 3.0);
     bla2.add_random_pattern(0.5, 1.0);
     bla2.add_random_pattern(0.5, 1.0);
     bla2.add_random_pattern(0.5, 1.0);
-    bla2.add_random_pattern(0.5, 1.0);
-    bla2.add_random_pattern(0.5, 1.0);
-    bla2.add_random_pattern(0.5, 1.0);
-    bla2.add_random_pattern(0.5, 1.0);
-    bla2.add_random_pattern(0.5, 1.0);
+    //bla2.add_random_pattern(0.5, 1.0);
+    //bla2.add_random_pattern(0.5, 1.0);
+    //bla2.add_random_pattern(0.5, 1.0);
+    //bla2.add_random_pattern(0.5, 1.0);
 
     // Make the hebbian matrix based on the stored patterns
     bla2.make_hebb_matrix();
@@ -63,6 +63,7 @@ int main(){
     // Simple simulation scheme
     for(int t = 0; t != TIMER; ++t){
         bla2.antiHebb_update();
+        bla2.hebb_update();
         //bla2.state_update_tgh();
         bla2.state_update_rational();
         bla2.activity_update();
