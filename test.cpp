@@ -74,7 +74,8 @@ int main(int argc, char* argv[]){
         if(boolHebb){
             rnn_model.hebb_update();
         }
-        rnn_model.state_update_tgh();
+        //rnn_model.state_update_tgh();
+        rnn_model.state_update_rational();
         rnn_model.activity_update();
         rnn_model.generate_m(m_vec);
         for(float& mu : m_vec){
