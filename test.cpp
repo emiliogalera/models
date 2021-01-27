@@ -37,10 +37,10 @@ int main(int argc, char* argv[]){
 
     // Create a parameter variable for simulation
     rate::parameters simu_par;
-    simu_par.eps_ah = 0.09; //0.02
+    simu_par.eps_ah = 0.02; //0.02
     simu_par.eps_h = 0.001;
     simu_par.gamma = 10.0;
-    simu_par.tau = 600.0; //100
+    simu_par.tau = 100.0; //100
     simu_par.N = N; //might cause a warning!
 
     // Instanciate a ItineratedMap object with an initial state
