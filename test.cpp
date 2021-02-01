@@ -1,5 +1,7 @@
 #include<iostream>
 #include<vector>
+#include<string>
+#include<fstream>
 #include "models.h"
 
 
@@ -22,7 +24,7 @@ void print_var(const std::vector<std::vector<float>>& vec){
 }
 
 /*test call fingerprint:
- *./test.out N Hebb/noHebb(0, 1) #of_strong_patterns F_strong #of_weak_patterns F_weak Prob
+ *./test.out N Hebb/noHebb(0, 1) #of_strong_patterns F_strong #of_weak_patterns F_weak Prob target_folder
  */
 int main(int argc, char* argv[]){
 
@@ -34,13 +36,14 @@ int main(int argc, char* argv[]){
     int nwp = std::stoi(argv[5]);
     float fweak = std::stof(argv[6]);
     float prob = std::stof(argv[7]);
+    std::string target = argv[8];
 
     // Create a parameter variable for simulation
     rate::parameters simu_par;
-    simu_par.eps_ah = 0.009; //0.02
+    simu_par.eps_ah = 0.02; //0.02
     simu_par.eps_h = 0.001;
     simu_par.gamma = 10.0;
-    simu_par.tau = 600.0; //100
+    simu_par.tau = 100.0; //100
     simu_par.N = N; //might cause a warning!
 
     // Instanciate a ItineratedMap object with an initial state
@@ -68,6 +71,14 @@ int main(int argc, char* argv[]){
     // the various stored patterns
     std::vector<float> m_vec;
 
+    // builds the path for the target file
+    target = target + "/" + "simu_N=" + argv[1] + "_Hebb=" + argv[2] + "_nsp=" + argv[3] + "_FS=" + argv[4] + "_nwp=" + argv[5] + "_FW=" + argv[6] + ".txt";
+
+    std::ofstream outoput_fs;
+    outoput_fs.open(target); //opens a file stream
+
+    //std::string line; // string to build the line to file
+
     // Simple simulation scheme
     for(int t = 0; t != TIMER; ++t){
         rnn_model.antiHebb_update();
@@ -79,10 +90,12 @@ int main(int argc, char* argv[]){
         rnn_model.activity_update();
         rnn_model.generate_m(m_vec);
         for(float& mu : m_vec){
-            std::cout << mu << " ";
+            //line += std::to_string(mu) + " ";
+            outoput_fs << mu << " ";
         }
-        std::cout << std::endl;
+        outoput_fs << "\n";
     }
+    outoput_fs.close();
 
     return 0;
 }
