@@ -24,7 +24,7 @@ void print_var(const std::vector<std::vector<float>>& vec){
 }
 
 /*test call fingerprint:
- *./test.out N Hebb/noHebb(0, 1) #of_strong_patterns F_strong #of_weak_patterns F_weak Prob target_folder
+ *./test.out N Hebb/noHebb(0, 1) #of_strong_patterns F_strong #of_weak_patterns F_weak Prob target_folder simu_id
  */
 int main(int argc, char* argv[]){
 
@@ -32,7 +32,11 @@ int main(int argc, char* argv[]){
     int N = std::stoi(argv[1]);
     int boolHebb = std::stoi(argv[2]);
     int nsp = std::stoi(argv[3]);
-    float fstrong = std::stof(argv[4]);
+    //float fstrong = std::stof(argv[4]);
+    int fstrong = std::stof(argv[4]); // now fstrong selects a combination of
+                                      // strong f to study how itinerancy
+                                      // occours when the strengh of strong
+                                      // patterns are not homogeneous
     int nwp = std::stoi(argv[5]);
     float fweak = std::stof(argv[6]);
     float prob = std::stof(argv[7]);
@@ -40,10 +44,10 @@ int main(int argc, char* argv[]){
 
     // Create a parameter variable for simulation
     rate::parameters simu_par;
-    simu_par.eps_ah = 0.02; //0.02
+    simu_par.eps_ah = 0.02; //0.009
     simu_par.eps_h = 0.001;
     simu_par.gamma = 10.0;
-    simu_par.tau = 100.0; //100
+    simu_par.tau = 100.0; //600
     simu_par.N = N; //might cause a warning!
 
     // Instanciate a ItineratedMap object with an initial state
@@ -52,8 +56,20 @@ int main(int argc, char* argv[]){
 
     // Stores P random patterns
     //first stores the strong patterns
+    std::vector<std::vector<float>> fs_matrix;
+    std::vector<float> fs_vec0{10.0, 10.0, 10.0, 6.0, 6.0, 6.0, 3.0, 3.0, 3.0, 3.0}; //0
+    fs_matrix.push_back(fs_vec0);
+    std::vector<float> fs_vec1{5.0, 5.0, 5.0, 4.0, 4.0, 4.0, 2.0, 2.0, 2.0, 1.0}; //1
+    fs_matrix.push_back(fs_vec1);
+    std::vector<float> fs_vec2{10.0, 10.0, 8.0, 8.0, 6.0, 6.0, 4.0, 4.0, 2.0, 2.0}; //2
+    fs_matrix.push_back(fs_vec2);
+    std::vector<float> fs_vec3{10.0, 10.0, 8.0, 8.0, 8.0, 6.0, 6.0, 6.0, 5.0, 5.0}; //3
+    fs_matrix.push_back(fs_vec3);
+
+
+
     for(int i = 0; i != nsp; ++i){
-        rnn_model.add_random_pattern(prob, fstrong);
+        rnn_model.add_random_pattern(prob, fs_matrix[fstrong][i]);
     }
     for(int i = 0; i != nwp; ++i){
         rnn_model.add_random_pattern(prob, fweak);
@@ -72,7 +88,7 @@ int main(int argc, char* argv[]){
     std::vector<float> m_vec;
 
     // builds the path for the target file
-    target = target + "/" + "simu_N=" + argv[1] + "_Hebb=" + argv[2] + "_nsp=" + argv[3] + "_FS=" + argv[4] + "_nwp=" + argv[5] + "_FW=" + argv[6] + ".txt";
+    target = target + "/" + "simu_id=" + argv[9] + "_N=" + argv[1] + "_Hebb=" + argv[2] + "_nsp=" + argv[3] + "_FS=" + argv[4] + "_nwp=" + argv[5] + "_FW=" + argv[6] + ".txt";
 
     std::ofstream outoput_fs;
     outoput_fs.open(target); //opens a file stream

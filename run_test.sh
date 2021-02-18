@@ -1,12 +1,20 @@
 #!/bin/bash
 
 # fixed parameters
-fs=5
-fw=2.5
 N=100
 Hebb=0
 prob=0.5
 tf="data_test"
+nsp=10
+nwp=0
+
+# simu=1 5 nsp and 5nwp
+
+# simu2 10nsp, exploring the relation between patterns with different strength
+# simu_id=2
+
+# simu2 10nsp, grouping patterns by strength
+simu_id=3
 
 # script variables
 nproc='ps -e -o psr= | sort | uniq | wc -l > nproc'
@@ -14,14 +22,19 @@ nproc='ps -e -o psr= | sort | uniq | wc -l > nproc'
 
 
 # array parameters
-nsp=(0 1 2 3 4 5 6 7 8 9 10)
-nwp=(10 9 8 7 6 5 4 3 2 1 0)
+index_array=(0 1 2 3)
+fw=(1 1 1 1)
+fs=(0 1 2 3)
 
-index_array=(0 1 2 3 4 5 6 7 8 9 10)
-
+#let k=0
 for idx in "${index_array[@]}"
 do
 #of_strong_patterns F_strong #of_weak_patterns F_weak Prob target_folder
-    setsid nohup ./teste.out $N $Hebb ${nsp[idx]} $fs ${nwp[idx]} $fw $prob $tf  >test.log 2>&1 < test.log &
-    #echo $N $Hebb ${nsp[idx]} $fs ${nwp[idx]} $fw $prob $tf
+    setsid nohup ./teste.out $N $Hebb $nsp ${fs[idx]} $nwp ${fw[idx]} $prob $tf $simu_id  >test.log 2>&1 < test.log &
+#    ((++k))
+#    if ((k==nproc)); then
+#        echo "sleeping"
+#        sleep 10
+#    fi
+    echo $N $Hebb $nsp ${fs[idx]} $nwp ${fw[idx]} $prob $tf $simu_id
 done
