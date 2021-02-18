@@ -41,6 +41,12 @@ void rate::ItineratedMap::add_random_pattern(float prob, float strength){
     state_var.f_vec.push_back(strength);
 }
 
+void rate::ItineratedMap::add_exterior_pattern(std::vector<float>& vec, float strength){
+    std::vector<float> xi_u(vec.begin(), vec.end());
+    state_var.P_matrix.push_back(xi_u);
+    state_var.f_vec.push_back(strength);
+}
+
 void rate::ItineratedMap::make_hebb_matrix(){
     for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
         for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){

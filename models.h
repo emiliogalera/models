@@ -91,6 +91,9 @@ namespace rate{
             // Stores a random pattern, where xi in [-1, 1].
             void add_random_pattern(float prob, float strength);
 
+            // Stores a pattern provided by the user
+            void add_exterior_pattern(std::vector<float>& vec, float strength);
+
             // Generates the Hebbian matrix part of the connection
             void make_hebb_matrix();
 
