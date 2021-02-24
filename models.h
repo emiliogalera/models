@@ -88,6 +88,9 @@ namespace rate{
             // Initiate the state vector with random values in the range (a, b)
             ItineratedMap(parameters& par, float a, float b);
 
+            // Instanciate a class from parameters and initial state provided by the user
+            ItineratedMap(parameters& par, std::vector<float>& vec);
+
             // Stores a random pattern, where xi in [-1, 1].
             void add_random_pattern(float prob, float strength);
 

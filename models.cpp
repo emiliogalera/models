@@ -26,6 +26,22 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     }
 }
 
+rate::ItineratedMap::ItineratedMap(parameters& par, std::vector<float>& vec){
+    net_par.N = par.N;
+    net_par.gamma = par.gamma;
+    net_par.eps_ah = par.eps_ah/float(par.N);
+    net_par.eps_h = par.eps_h/float(par.N);
+    net_par.tau = (1.0 - (1.0/par.tau));
+
+    std::vector<float> dummy(net_par.N, 0.0);
+    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+        state_var.s_vec.push_back(vec[i]);
+        state_var.h_vec.push_back(0.0);
+        state_var.Hebb_matrix.push_back(dummy);
+        state_var.antiHebb_matrix.push_back(dummy);
+    }
+}
+
 void rate::ItineratedMap::add_random_pattern(float prob, float strength){
     prepare_random_device(0.0, 1.0);
     std::vector<float> xi_u;
