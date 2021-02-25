@@ -6,19 +6,19 @@
 #include "models.h"
 
 /* ------------ rate models namespace ------------ */
-rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
+rate::ItineratedMap::ItineratedMap(rate::parameters& par, double a, double b){
     prepare_random_device(a, b);
 
     // IMPORTANT: in the constructor, epsilon and tau are already in the
     // dynamics form.
     net_par.N = par.N;
     net_par.gamma = par.gamma;
-    net_par.eps_ah = par.eps_ah/float(par.N);
-    net_par.eps_h = par.eps_h/float(par.N);
+    net_par.eps_ah = par.eps_ah/double(par.N);
+    net_par.eps_h = par.eps_h/double(par.N);
     net_par.tau = (1.0 - (1.0/par.tau));
 
-    std::vector<float> dummy(net_par.N, 0.0);
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+    std::vector<double> dummy(net_par.N, 0.0);
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec.push_back(draw());
         state_var.h_vec.push_back(0.0);
         state_var.Hebb_matrix.push_back(dummy);
@@ -26,15 +26,15 @@ rate::ItineratedMap::ItineratedMap(rate::parameters& par, float a, float b){
     }
 }
 
-rate::ItineratedMap::ItineratedMap(parameters& par, std::vector<float>& vec){
+rate::ItineratedMap::ItineratedMap(parameters& par, std::vector<double>& vec){
     net_par.N = par.N;
     net_par.gamma = par.gamma;
-    net_par.eps_ah = par.eps_ah/float(par.N);
-    net_par.eps_h = par.eps_h/float(par.N);
+    net_par.eps_ah = par.eps_ah/double(par.N);
+    net_par.eps_h = par.eps_h/double(par.N);
     net_par.tau = (1.0 - (1.0/par.tau));
 
-    std::vector<float> dummy(net_par.N, 0.0);
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+    std::vector<double> dummy(net_par.N, 0.0);
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec.push_back(vec[i]);
         state_var.h_vec.push_back(0.0);
         state_var.Hebb_matrix.push_back(dummy);
@@ -42,10 +42,10 @@ rate::ItineratedMap::ItineratedMap(parameters& par, std::vector<float>& vec){
     }
 }
 
-void rate::ItineratedMap::add_random_pattern(float prob, float strength){
+void rate::ItineratedMap::add_random_pattern(double prob, double strength){
     prepare_random_device(0.0, 1.0);
-    std::vector<float> xi_u;
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+    std::vector<double> xi_u;
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         if(draw() < prob){
             xi_u.push_back(1.0);
         }
@@ -57,70 +57,70 @@ void rate::ItineratedMap::add_random_pattern(float prob, float strength){
     state_var.f_vec.push_back(strength);
 }
 
-void rate::ItineratedMap::add_exterior_pattern(std::vector<float>& vec, float strength){
-    std::vector<float> xi_u(vec.begin(), vec.end());
+void rate::ItineratedMap::add_exterior_pattern(std::vector<double>& vec, double strength){
+    std::vector<double> xi_u(vec.begin(), vec.end());
     state_var.P_matrix.push_back(xi_u);
     state_var.f_vec.push_back(strength);
 }
 
 void rate::ItineratedMap::make_hebb_matrix(){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
-        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
-            float aux = 0.0;
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
+            double aux = 0.0;
             if(i != j){
-                for(std::vector<std::vector<float>>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
+                for(std::vector<std::vector<double>>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
                     aux += state_var.f_vec[u]*state_var.P_matrix[u][i]*state_var.P_matrix[u][j];
                 }
             }
             //TODO: Ask Osame if the normalization is ok.
-            state_var.Hebb_matrix[i][j] = aux/(float(net_par.N)*float(state_var.P_matrix.size()));
-            //state_var.Hebb_matrix[i][j] = aux/(float(net_par.N));
+            state_var.Hebb_matrix[i][j] = aux/(double(net_par.N)*double(state_var.P_matrix.size()));
+            //state_var.Hebb_matrix[i][j] = aux/(double(net_par.N));
         }
     }
 }
 
 /*---- Probing methods ----*/
-std::vector<float>& rate::ItineratedMap::get_xi(int u){
+std::vector<double>& rate::ItineratedMap::get_xi(int u){
     return state_var.P_matrix[u];
 }
 
-std::vector<float>& rate::ItineratedMap::get_State(){
+std::vector<double>& rate::ItineratedMap::get_State(){
     return state_var.s_vec;
 }
 
-std::vector<float>& rate::ItineratedMap::get_activity(){
+std::vector<double>& rate::ItineratedMap::get_activity(){
     return state_var.h_vec;
 }
-std::vector<std::vector<float>>& rate::ItineratedMap::get_hebb(){
+std::vector<std::vector<double>>& rate::ItineratedMap::get_hebb(){
     return state_var.Hebb_matrix;
 }
 
-std::vector<std::vector<float>>& rate::ItineratedMap::get_antihebb(){
+std::vector<std::vector<double>>& rate::ItineratedMap::get_antihebb(){
     return state_var.antiHebb_matrix;
 }
 
-void rate::ItineratedMap::generate_m(std::vector<float>& m_recipient){
+void rate::ItineratedMap::generate_m(std::vector<double>& m_recipient){
     if(!m_recipient.empty()){
         m_recipient.clear();
     }
-    float mod_state = 0.0;
-    for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+    double mod_state = 0.0;
+    for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
         mod_state += state_var.s_vec[j]*state_var.s_vec[j];
     }
-    for(std::vector<float>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
-        float prod = 0.0;
-        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+    for(std::vector<double>::size_type u = 0; u != state_var.P_matrix.size(); ++u){
+        double prod = 0.0;
+        for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
             prod += state_var.s_vec[j]*state_var.P_matrix[u][j];
         }
-        m_recipient.push_back(prod/(std::sqrt(mod_state)*std::sqrt(float(net_par.N))));
+        m_recipient.push_back(prod/(std::sqrt(mod_state)*std::sqrt(double(net_par.N))));
     }
 }
 
 /*---- Update methods ----*/
 void rate::ItineratedMap::activity_update(){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
-        float aux = 0.0;
-        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
+        double aux = 0.0;
+        for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
             aux += (state_var.Hebb_matrix[i][j] + state_var.antiHebb_matrix[i][j])*state_var.s_vec[j];
         }
         state_var.h_vec[i] = aux;
@@ -128,36 +128,36 @@ void rate::ItineratedMap::activity_update(){
 }
 
 void rate::ItineratedMap::state_update_tgh(){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec[i] = std::tanh(net_par.gamma*state_var.h_vec[i]);
     }
 }
 
-void rate::ItineratedMap::state_update_tgh(std::vector<float>& input){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+void rate::ItineratedMap::state_update_tgh(std::vector<double>& input){
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         state_var.s_vec[i] = std::tanh(net_par.gamma*state_var.h_vec[i] + input[i]);
     }
 }
 
 void rate::ItineratedMap::state_update_rational(){
-    float x;
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+    double x;
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         x = net_par.gamma*state_var.h_vec[i];
         state_var.s_vec[i] = x/(1.0 + std::abs(x));
     }
 }
 
-void rate::ItineratedMap::state_update_rational(std::vector<float>& input){
-    float x;
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
+void rate::ItineratedMap::state_update_rational(std::vector<double>& input){
+    double x;
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
         x = (net_par.gamma*state_var.h_vec[i]) + input[i];
         state_var.s_vec[i] = x/(1.0 + std::abs(x));
     }
 }
 
 void rate::ItineratedMap::antiHebb_update(){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
-        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
             //state_var.antiHebb_matrix[i][j] = (net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j]));
             state_var.antiHebb_matrix[i][j] = (i == j) ? 0.0 : ((net_par.tau*state_var.antiHebb_matrix[i][j]) - (net_par.eps_ah*(state_var.s_vec[i]*state_var.s_vec[j])));
         }
@@ -165,8 +165,8 @@ void rate::ItineratedMap::antiHebb_update(){
 }
 
 void rate::ItineratedMap::hebb_update(){
-    for(std::vector<float>::size_type i = 0; i != net_par.N; ++i){
-        for(std::vector<float>::size_type j = 0; j != net_par.N; ++j){
+    for(std::vector<double>::size_type i = 0; i != net_par.N; ++i){
+        for(std::vector<double>::size_type j = 0; j != net_par.N; ++j){
             //state_var.Hebb_matrix[i][j] = state_var.Hebb_matrix[i][j] - (net_par.eps_h*(state_var.s_vec[i]*state_var.s_vec[j]));
             state_var.Hebb_matrix[i][j] = (i == j) ? 0.0 : (state_var.Hebb_matrix[i][j] - (net_par.eps_h*state_var.s_vec[i]*state_var.s_vec[j]));
         }
@@ -175,16 +175,16 @@ void rate::ItineratedMap::hebb_update(){
 
 /*---- Private methods ----*/
 // Prepares the random number generator
-void rate::ItineratedMap::prepare_random_device(float a, float b){
+void rate::ItineratedMap::prepare_random_device(double a, double b){
     std::random_device dev;
     device.eng.seed(dev());
-    device.dist.param(std::uniform_real_distribution<float>::param_type(a, b));
+    device.dist.param(std::uniform_real_distribution<double>::param_type(a, b));
     device.dist.reset();
 }
 
 // draws a random number from the prepared distribution.
 // Always prepare the distribution before drawing from it.
-float rate::ItineratedMap::draw(){
+double rate::ItineratedMap::draw(){
     return device.dist(device.eng);
 }
 
