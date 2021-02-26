@@ -20,22 +20,22 @@ int main(int argc, char* argv[]){
     rate::ItineratedMap net(simu_par, -1.0, 1.0);
 
     // Basic pattern used to create the similarity groups
-    std::vector<float> pattern(simu_par.N, 0.0);
+    std::vector<double> pattern(simu_par.N, 0.0);
 
     /* Creates 3 sub-groups, each with 3 patterns. Patterns belonging to the same
       group share X% similarity.*/
 
-    float percent = std::stof(argv[1]);
-    int n_percent = static_cast<int>(static_cast<float>(simu_par.N)*percent);
+    double percent = std::stof(argv[1]);
+    int n_percent = static_cast<int>(static_cast<double>(simu_par.N)*percent);
 
     std::random_device dev;
     std::mt19937 gen(dev());
-    std::uniform_real_distribution<float> dist(0.0, 1.0);
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
 
     // Number of groups and number of patterns per group
     int NGROUP = 3;
     int PATTERN_PER_GROUP = 3;
-    float PATTERN_STRENGHT = 9.0;
+    double PATTERN_STRENGHT = 9.0;
 
     // loop the 3 groups
     for(int group = 0; group != NGROUP; ++group){
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]){
         // creates the 3 pattern for each group
         for(int pat = 0; pat != PATTERN_PER_GROUP; ++pat){
             // changes the N-n_percent elements of the vector
-            for(std::vector<float>::size_type j = n_percent; j != simu_par.N; ++j){
+            for(std::vector<double>::size_type j = n_percent; j != simu_par.N; ++j){
                 if(dist(gen) < 0.5){
                     pattern[j] = 1.0;
                 }
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]){
 
     // A vector to store the projection of the current network state on to
     // the various stored patterns
-    std::vector<float> m_vec;
+    std::vector<double> m_vec;
     for(int t = 0; t != TIME; ++t){
         net.antiHebb_update();
         if(std::stoi(argv[3])){
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
         //net.state_update_rational();
         net.activity_update();
         net.generate_m(m_vec);
-        for(float& mu : m_vec){
+        for(double& mu : m_vec){
             //line += std::to_string(mu) + " ";
             output_fs << mu << " ";
         }
