@@ -199,10 +199,11 @@ namespace spiking{
 			    random_device device;
 
 			    void prepare_random_device(double a, double b);
-			    double raw();
+			    double draw();
 
 		    public:
-                void hello(std::string msg);
+				// important, the dynamics must start with an update on V!
+                GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par);
     };
 }
 
