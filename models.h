@@ -4,8 +4,14 @@
 #include<string>
 #include<vector>
 #include<random>
-#include<map>
 
+/*TODO: Rate models and spiking models share many variables and logic.
+ * - Create a namespace to group vars and pars common to both type of models.
+ * - Find a way to separete learning and synapse dynamic from classes. This
+ * should help to build generic models by blocks*/
+
+
+/*Everything related to rate model neurons*/
 namespace rate{
     /* Group the parameters of the model:
      * N = size of the network
@@ -145,12 +151,58 @@ namespace rate{
     };
 }
 
+/*Everything related spiking neurons*/
 namespace spiking{
-        class lif{
-        private:
-            int N;
-        public:
-            void hello(std::string msg);
+
+		/*--- GGL structures, parameters and variables ---*/
+		struct GGL_parameters{
+			double v_reset;
+			double mu;
+			double v_base;
+			double theta;
+			double Gamma;
+			std::vector<double>::size_type N;
+
+		};
+		struct GGL_synapses_parameters{
+			double tau;
+			double eps_fast;
+			double eps_slow;
+		};
+
+		struct GGL_vectors{
+			std::vector<int> x_vector;
+			std::vector<double> v_vector;
+			std::vector<double> pattern_strength;
+		};
+
+		struct GGL_matrix{
+			std::vector<std::vector<double>> slow_matrix;
+			std::vector<std::vector<double>> fast_matrix;
+			std::vector<std::vector<double>> pattern_matrix;
+		};
+
+		struct random_device{
+        	std::mt19937 eng;
+        	std::uniform_real_distribution<double> dist;
+    	};
+
+
+
+        class GGL{
+            private:
+			    GGL_parameters pars;
+			    GGL_synapses_parameters synp;
+			    GGL_vectors vecs;
+			    GGL_matrix mat;
+
+			    random_device device;
+
+			    void prepare_random_device(double a, double b);
+			    double raw();
+
+		    public:
+                void hello(std::string msg);
     };
 }
 

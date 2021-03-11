@@ -190,6 +190,6 @@ double rate::ItineratedMap::draw(){
 
 /* ------------ spiking models namespace ------------ */
 
-void spiking::lif::hello(std::string msg){
+void spiking::GGL::hello(std::string msg){
     std::cout << msg << std::endl;
 }

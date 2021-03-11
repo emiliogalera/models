@@ -1,5 +1,6 @@
 .vscode/
 data_test/*
 data/**
+*.sw*
 *.out
 *.log
