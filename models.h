@@ -170,15 +170,27 @@ namespace spiking{
 			double eps_slow;
 		};
 
+		//GGL model vectors TODO: refactor - create generic structures
 		struct GGL_vectors{
+			//container for the state of neurons
 			std::vector<int> x_vector;
+			//container for the membrane potential
 			std::vector<double> v_vector;
+			//container the strenght of each pattern
 			std::vector<double> pattern_strength;
+			//activity vector, named to keep consistency with rate model
+			std::vector<double> h_vec;
 		};
 
+		//GGL model matrices TODO: refactor - create generic structure
+		//TODO: find a better way to store synapse info, this will get big for
+		//large networks
 		struct GGL_matrix{
+			//slow hebbian dynamics container
 			std::vector<std::vector<double>> slow_matrix;
+			//fast anti-hebbian dynamics container
 			std::vector<std::vector<double>> fast_matrix;
+			//container for the patterns
 			std::vector<std::vector<double>> pattern_matrix;
 		};
 
@@ -204,6 +216,14 @@ namespace spiking{
 		    public:
 				// important, the dynamics must start with an update on V!
                 GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par);
+
+				/*---- Supporting functionds ----*/
+				/*Returns the network activity of nerun i*/
+				double activity(std::vector<std::vector<double>>::size_type i);
+				void add_exterior_pattern(std::vector<double>& pat, double str);
+
+				/*---- Synapses functions----*/
+				void make_hebb_matrix();
     };
 }
 

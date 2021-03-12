@@ -223,3 +223,38 @@ void spiking::GGL::prepare_random_device(double a, double b){
 double spiking::GGL::draw(){
 	return device.dist(device.eng);
 }
+
+/*---- Supporting functionds ----*/
+double spiking::GGL::activity(std::vector<std::vector<double>>::size_type i){
+	double act = 0.0;
+	for(std::vector<double>::size_type j = 0; j != pars.N; ++j){
+		act += (mat.fast_matrix[i][j] + mat.slow_matrix[i][j])*vecs.x_vector[j];
+	}
+	// Should be N - 1?
+	return act/static_cast<double>(pars.N);
+}
+
+void spiking::GGL::add_exterior_pattern(std::vector<double>& pat, double str){
+	std::vector<double> aux;
+	for(double elem : pat){
+		aux.push_back(elem);
+	}
+	mat.pattern_matrix.push_back(aux);
+	vecs.pattern_strength.push_back(str);
+}
+
+/*---- Synapses functions----*/
+void spiking::GGL::make_hebb_matrix(){
+	double aux;
+	for(std::vector<std::vector<double>>::size_type i = 0; i != pars.N; ++i){
+		for(std::vector<double>::size_type j = 0; j != pars.N; ++j){
+			aux = 0.0;
+			if(i != j){
+				for(std::vector<std::vector<double>>::size_type mu = 0; mu != mat.pattern_matrix.size(); ++mu){
+					aux += mat.pattern_matrix[mu][i]*mat.pattern_matrix[mu][j]*vecs.pattern_strength[mu];
+				}
+			}
+			mat.slow_matrix[i][j] = aux/(static_cast<double>(pars.N)*static_cast<double>(mat.pattern_matrix.size()));
+		}
+	}
+}
