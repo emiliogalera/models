@@ -3,6 +3,7 @@
 #include<random>
 #include<vector>
 #include<cmath>
+#include<numeric>
 #include "models.h"
 
 /* ------------ rate models namespace ------------ */
@@ -199,12 +200,13 @@ spiking::GGL::GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par){
 
 	synp.eps_fast = (syn_par.eps_fast/(static_cast<double>(pars.N)));
 	synp.eps_slow = (syn_par.eps_slow/(static_cast<double>(pars.N)));
-	synp.tau = syn_par.tau;
+	synp.tau = 1.0 - (1.0/syn_par.tau);
 
 	prepare_random_device(0.0, 1.0);
 	
 	std::vector<double> dummy(pars.N, 0.0);
 	for(std::vector<double>::size_type i = 0; i != pars.N; ++i){
+		vecs.h_vec.push_back(0.0);
 		vecs.x_vector.push_back(0);
 		vecs.v_vector.push_back(draw());
 		mat.fast_matrix.push_back(dummy);
@@ -224,6 +226,11 @@ double spiking::GGL::draw(){
 	return device.dist(device.eng);
 }
 
+double spiking::GGL::phy(std::vector<double>::size_type i){
+	double aux = pars.Gamma*(vecs.v_vector[i] - pars.theta);
+	return (aux < 0.0) ? 0.0 : aux/(1.0 + aux);
+}
+
 /*---- Supporting functionds ----*/
 double spiking::GGL::activity(std::vector<std::vector<double>>::size_type i){
 	double act = 0.0;
@@ -234,13 +241,41 @@ double spiking::GGL::activity(std::vector<std::vector<double>>::size_type i){
 	return act/static_cast<double>(pars.N);
 }
 
-void spiking::GGL::add_exterior_pattern(std::vector<double>& pat, double str){
+void spiking::GGL::net_activity(){
+	for(std::vector<double>::size_type i = 0; i != pars.N; ++i){
+		vecs.h_vec[i] = activity(i);
+	}
+}
+
+void spiking::GGL::add_exterior_pattern(std::vector<double>& pat, double strength){
 	std::vector<double> aux;
+	double si;
 	for(double elem : pat){
-		aux.push_back(elem);
+		si = (2.0*elem) - 1.0;
+		aux.push_back(si);
 	}
 	mat.pattern_matrix.push_back(aux);
-	vecs.pattern_strength.push_back(str);
+	vecs.pattern_strength.push_back(strength);
+}
+
+void spiking::GGL::add_random_pattern(double prob, double strength){
+	std::vector<double> pattern;
+	prepare_random_device(0.0, 1.0);
+	for(std::vector<double>::size_type i = 0; i != pars.N; ++i){
+		if(draw() < prob){
+			pattern.push_back(1.0);
+		}
+		else{
+			pattern.push_back(0.0);
+		}
+	}
+	vecs.pattern_strength.push_back(strength);
+	mat.pattern_matrix.push_back(pattern);
+}
+
+void spiking::GGL::random_spike(){
+	double aux = static_cast<double>(pars.N - 1)*draw();
+	vecs.x_vector[static_cast<std::vector<int>::size_type>(aux)] = 1;
 }
 
 /*---- Synapses functions----*/
@@ -257,4 +292,54 @@ void spiking::GGL::make_hebb_matrix(){
 			mat.slow_matrix[i][j] = aux/(static_cast<double>(pars.N)*static_cast<double>(mat.pattern_matrix.size()));
 		}
 	}
+}
+
+void spiking::GGL::slow_syn_update(){
+	double si, sj;
+	for(std::vector<std::vector<double>>::size_type i = 0; i != pars.N; ++i){
+		for(std::vector<double>::size_type j = 0; j != pars.N; ++j){
+			si = static_cast<double>((2*vecs.x_vector[i]) - 1);
+			sj = static_cast<double>((2*vecs.x_vector[j]) - 1);
+			mat.slow_matrix[i][j] = (i == j) ? 0.0 : mat.slow_matrix[i][j] - (synp.eps_slow*si*sj);
+		}
+	}
+}
+
+void spiking::GGL::fast_syn_update(){
+	double si, sj;
+	for(std::vector<std::vector<double>>::size_type i = 0; i != pars.N; ++i){
+		for(std::vector<double>::size_type j = 0; j != pars.N; ++j){
+			si = static_cast<double>((2*vecs.x_vector[i]) - 1);
+			sj = static_cast<double>((2*vecs.x_vector[j]) - 1);
+			mat.fast_matrix[i][j] = (i == j) ? 0.0 : (synp.tau*mat.fast_matrix[i][j]) - (synp.eps_fast*si*sj);
+		}
+	}
+}
+
+/*---- Dynamics functions ----*/
+double spiking::GGL::vtt(std::vector<double>::size_type i){
+	double res = (vecs.x_vector[i] == 1) ? pars.v_reset : (pars.mu*(vecs.v_vector[i] - pars.v_base)) + pars.v_base + activity(i);
+	return res;
+}
+
+int spiking::GGL::xtt(std::vector<int>::size_type i){
+	int res = (vecs.x_vector[i] == 1) ? 0 : static_cast<int>(draw() < phy(i));
+	return res;
+}
+
+void spiking::GGL::net_vtt(){
+	for(std::vector<double>::size_type i = 0; i != pars.N; ++i){
+		vecs.v_vector[i] = vtt(i);
+	}
+}
+
+void spiking::GGL::net_xtt(){
+	for(std::vector<int>::size_type i = 0; i != pars.N; ++i){
+		vecs.x_vector[i] = xtt(i);
+	}
+}
+
+/*---- Probing functions ----*/
+int spiking::GGL::rho(){
+	return std::accumulate(vecs.x_vector.begin(), vecs.x_vector.end(), 0);
 }

@@ -212,6 +212,7 @@ namespace spiking{
 
 			    void prepare_random_device(double a, double b);
 			    double draw();
+				double phy(std::vector<double>::size_type i);
 
 		    public:
 				// important, the dynamics must start with an update on V!
@@ -220,10 +221,27 @@ namespace spiking{
 				/*---- Supporting functionds ----*/
 				/*Returns the network activity of nerun i*/
 				double activity(std::vector<std::vector<double>>::size_type i);
-				void add_exterior_pattern(std::vector<double>& pat, double str);
+				void net_activity();
+				/* pat must be a {0, 1} vector of states of the model
+				 *pat will be converted to {-1, 1}. si = 2*xi - 1*/
+				void add_exterior_pattern(std::vector<double>& pat, double strength);
+				void add_random_pattern(double prob, double strength);
+				void random_spike();
 
 				/*---- Synapses functions----*/
 				void make_hebb_matrix();
+				void fast_syn_update();
+				void slow_syn_update();
+
+				/*---- Dynamics functions----*/
+				double vtt(std::vector<double>::size_type i);
+				int xtt(std::vector<int>::size_type i);
+				void net_vtt();
+				//void net_vtt(std::vector<double>& input);
+				void net_xtt();
+
+				/*---- Probing functions ----*/
+				int rho();
     };
 }
 
