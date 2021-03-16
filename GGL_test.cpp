@@ -6,12 +6,16 @@
 #include"models.h"
 
 
+/*Call: ./name.out pattern_strength alpha*/
 int main(int argc, char* argv[]){
 	spiking::GGL_parameters model_par;
 	spiking::GGL_synapses_parameters syn_par;
 
 	std::string fname = "data_test/testing_GGL_model_NET_w=";
-	fname = fname + argv[1] + "_N=1000"+ ".txt";
+	fname = fname + argv[1] + "_N=100.txt";
+
+	std::string pattern_fname = "data_test/pattern_GGL_model_NET_w=";
+	pattern_fname = pattern_fname + argv[1] + "_N=100.txt";
 
 	model_par.mu = 0.0;
 	model_par.theta = 0.0;
@@ -33,14 +37,16 @@ int main(int argc, char* argv[]){
 	net.make_hebb_matrix();
 
 	int TIME = 10000;
-	int rho_int;
-	std::ofstream file;
-	file.open(fname);
+
+	std::ofstream file_dynamics, file_pattern;
+	file_dynamics.open(fname);
+	file_pattern.open(pattern_fname);
 	std::vector<int>& ref_to_state = net.get_state();
 	for(double& elem : net.get_pattern(0)){
-		std::cout << elem << " ";
+		file_pattern << elem << " ";
 	}
-	std::cout << std::endl;
+	file_pattern << std::endl;
+	file_pattern.close();
 	//std::cout << "Hebbian matrix" << std::endl;
 	//std::vector<std::vector<double>>& hebbmat = net.get_hebb();
 	//for(std::vector<std::vector<double>>::size_type i = 0; i != model_par.N; ++i){
@@ -53,8 +59,7 @@ int main(int argc, char* argv[]){
 	std::cout << "---- Dynamics! ---- \n\n" << std::endl;
 	for(int t = 0; t != TIME; ++t){
 		net.net_xtt();
-		rho_int = net.rho();
-		switch(rho_int){
+		switch(net.rho()){
 			case 0:
 				net.random_spike();
 				break;
@@ -63,14 +68,13 @@ int main(int argc, char* argv[]){
 
 		}
 		for(int elem : ref_to_state){
-			std::cout << elem << " ";
+			file_dynamics << elem << " ";
 		}
-		std::cout << std::endl;
+		file_dynamics << "\n";
 		net.net_activity();
 		net.net_vtt();
-		file << rho_int << "\n";
 	}
-	file.close();
+	file_dynamics.close();
 
 	return 0;
 }
