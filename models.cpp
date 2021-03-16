@@ -190,7 +190,7 @@ double rate::ItineratedMap::draw(){
 }
 
 /* ------------ spiking models namespace ------------ */
-spiking::GGL::GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par){
+spiking::GGL::GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par, double alpha){
 	pars.mu = ggl_par.mu;
 	pars.theta = ggl_par.theta;
 	pars.v_base = ggl_par.v_base;
@@ -203,12 +203,12 @@ spiking::GGL::GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par){
 	synp.tau = 1.0 - (1.0/syn_par.tau);
 
 	prepare_random_device(0.0, 1.0);
-	
+
 	std::vector<double> dummy(pars.N, 0.0);
 	for(std::vector<double>::size_type i = 0; i != pars.N; ++i){
 		vecs.h_vec.push_back(0.0);
 		vecs.x_vector.push_back(0);
-		vecs.v_vector.push_back(draw());
+		vecs.v_vector.push_back(alpha*draw());
 		mat.fast_matrix.push_back(dummy);
 		mat.slow_matrix.push_back(dummy);
 	}
@@ -266,7 +266,7 @@ void spiking::GGL::add_random_pattern(double prob, double strength){
 			pattern.push_back(1.0);
 		}
 		else{
-			pattern.push_back(0.0);
+			pattern.push_back(-1.0);
 		}
 	}
 	vecs.pattern_strength.push_back(strength);
@@ -342,4 +342,25 @@ void spiking::GGL::net_xtt(){
 /*---- Probing functions ----*/
 int spiking::GGL::rho(){
 	return std::accumulate(vecs.x_vector.begin(), vecs.x_vector.end(), 0);
+}
+
+std::vector<int>& spiking::GGL::get_state(){
+	return vecs.x_vector;
+}
+
+std::vector<double>& spiking::GGL::get_vvec(){
+	return vecs.v_vector;
+}
+
+//TODO: Add protection against mu out of range!
+std::vector<double>& spiking::GGL::get_pattern(std::vector<std::vector<double>>::size_type mu){
+	return mat.pattern_matrix[mu];
+}
+
+std::vector<std::vector<double>>& spiking::GGL::get_hebb(){
+	return mat.slow_matrix;
+}
+
+std::vector<std::vector<double>>& spiking::GGL::get_antiHebb(){
+	return mat.fast_matrix;
 }

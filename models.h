@@ -215,17 +215,27 @@ namespace spiking{
 				double phy(std::vector<double>::size_type i);
 
 		    public:
-				// important, the dynamics must start with an update on V!
-                GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par);
+				// important, the dynamics must start with an update on X!
+				/*GGL contructor
+				 * - ggl_par := parameters for the model
+				 * - syn_par := parameters related to the synaptic matrices
+				 * and dynamics
+				 * - alpha := modulates the initial state of the potential
+				 *   vector V_0 = alpha*random(0, 1)*/
+                GGL(GGL_parameters ggl_par, GGL_synapses_parameters syn_par, double alpha);
 
 				/*---- Supporting functionds ----*/
 				/*Returns the network activity of nerun i*/
 				double activity(std::vector<std::vector<double>>::size_type i);
 				void net_activity();
-				/* pat must be a {0, 1} vector of states of the model
+
+				/* Very important patterns are stored in {-1, 1}
+				 * pat must be a {0, 1} vector of states of the model
 				 *pat will be converted to {-1, 1}. si = 2*xi - 1*/
 				void add_exterior_pattern(std::vector<double>& pat, double strength);
 				void add_random_pattern(double prob, double strength);
+
+				/*Generates a random spike in the network*/
 				void random_spike();
 
 				/*---- Synapses functions----*/
@@ -242,6 +252,11 @@ namespace spiking{
 
 				/*---- Probing functions ----*/
 				int rho();
+				std::vector<int>& get_state();
+				std::vector<double>& get_vvec();
+				std::vector<double>& get_pattern(std::vector<std::vector<double>>::size_type mu);
+				std::vector<std::vector<double>>& get_hebb();
+				std::vector<std::vector<double>>& get_antiHebb();
     };
 }
 
