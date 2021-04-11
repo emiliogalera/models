@@ -234,6 +234,7 @@ namespace spiking{
 				 *pat will be converted to {-1, 1}. si = 2*xi - 1*/
 				void add_exterior_pattern(std::vector<double>& pat, double strength);
 				void add_random_pattern(double prob, double strength);
+				void add_pn_pattern(std::vector<double>::size_type pn, double str);
 
 				/*Generates a random spike in the network*/
 				void random_spike();

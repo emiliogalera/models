@@ -273,6 +273,22 @@ void spiking::GGL::add_random_pattern(double prob, double strength){
 	mat.pattern_matrix.push_back(pattern);
 }
 
+void spiking::GGL::add_pn_pattern(std::vector<double>::size_type pn, double str){
+	std::vector<double> patt(pars.N, -1);
+	std::vector<double>::size_type flag = 0;
+	prepare_random_device(0.0, 1.0);
+	std::vector<double>::size_type candidate;
+	while(flag != pn){
+		candidate = static_cast<std::vector<double>::size_type>(static_cast<double>(pars.N)*draw());
+		if(patt[candidate] == -1.0){
+			patt[candidate] = 1.0;
+			++flag;
+		}
+	}
+	mat.pattern_matrix.push_back(patt);
+	vecs.pattern_strength.push_back(str);
+}
+
 void spiking::GGL::random_spike(){
 	double aux = static_cast<double>(pars.N - 1)*draw();
 	vecs.x_vector[static_cast<std::vector<int>::size_type>(aux)] = 1;
