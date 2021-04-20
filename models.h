@@ -235,6 +235,7 @@ namespace spiking{
 				void add_exterior_pattern(std::vector<double>& pat, double strength);
 				void add_random_pattern(double prob, double strength);
 				void add_pn_pattern(std::vector<double>::size_type pn, double str);
+				void add_orthogonal_pair(double str);
 
 				/*Generates a random spike in the network*/
 				void random_spike();

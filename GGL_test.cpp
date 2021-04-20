@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
 	model_par.v_base = 0.0;
 	model_par.v_reset = 0.0;
 	model_par.Gamma = 1.0;
-	model_par.N = 10;
+	model_par.N = 12;
 
 	syn_par.eps_fast = 0.09;
 	syn_par.eps_slow = 0.001;
@@ -35,6 +35,7 @@ int main(int argc, char* argv[]){
 	net.add_exterior_pattern(pat, static_cast<double>(model_par.N));
 	net.add_random_pattern(0.5, std::stod(argv[1]));
 	net.add_pn_pattern(model_par.N/2, static_cast<double>(model_par.N)*3.0);
+	net.add_orthogonal_pair(100.0);
 	net.make_hebb_matrix();
 
 	int TIME = 10000;

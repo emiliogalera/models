@@ -289,6 +289,26 @@ void spiking::GGL::add_pn_pattern(std::vector<double>::size_type pn, double str)
 	vecs.pattern_strength.push_back(str);
 }
 
+void spiking::GGL::add_orthogonal_pair(double str){
+	std::vector<double> p1(pars.N, -1);
+	std::vector<double> p2;
+	for(std::vector<double>::size_type i = 0; i != pars.N/2; ++i){
+		p1[i] = 1.0;
+	}
+	// build p2 by rotating p1 for 1/4 of N to the right
+	for(std::vector<double>::iterator i = p1.end() - (pars.N/4); i != p1.end(); ++i){
+		p2.push_back(*i);
+	}
+	for(std::vector<double>::iterator i = p1.begin(); i != p1.end() - (pars.N/4); ++i){
+		p2.push_back(*i);
+	}
+	mat.pattern_matrix.push_back(p1);
+	vecs.pattern_strength.push_back(str);
+	mat.pattern_matrix.push_back(p2);
+	vecs.pattern_strength.push_back(str);
+
+}
+
 void spiking::GGL::random_spike(){
 	double aux = static_cast<double>(pars.N - 1)*draw();
 	vecs.x_vector[static_cast<std::vector<int>::size_type>(aux)] = 1;
