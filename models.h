@@ -1,6 +1,7 @@
 #ifndef MODELS_H
 #define MODELS_H
 
+#include<cstddef>
 #include<string>
 #include<vector>
 #include<random>
@@ -260,6 +261,43 @@ namespace spiking{
 				std::vector<std::vector<double>>& get_hebb();
 				std::vector<std::vector<double>>& get_antiHebb();
     };
+
+	/*Simplest GGL class which uses the adaped model*/	
+	class SimpleGGL{
+		private:
+			// network and neuron parameters
+			double mu, gma;
+			std::vector<int>::size_type N;
+			std::vector<std::vector<double>>::size_type Pnbr;
+
+			// model variables
+			std::vector<double> vstate; //membrane potential
+			//std::vector<double> mvec; // projection vector
+			std::vector<int> xstate; // binary state of network
+			std::vector<double> mvec_prime; // see quation 10 of GGL + patt
+			
+			// patterns parameters
+			std::vector<double> vstrg; //Fmu: stores the strength of patts
+			std::vector<double> patt_sum; //sum of patterns *normalized
+			std::vector<std::vector<int>> patt_matrix; //stores -1,1 patterns
+
+			//random device variables
+			random_device device;
+
+			//private methods
+			void prepare_random_device(double a, double b);
+			double draw();
+
+		public:
+			/*Constructor - pass basic parameters
+			 * and generate a inital state*/
+			SimpleGGL(std::vector<int>::size_type Nelem, double mupar, double gamma, double alpha);
+
+			/*---- Supporting functions ----*/
+			void add_random_pattern(double prob, double strength);
+	
+	};
+
 }
 
 #endif

@@ -400,3 +400,54 @@ std::vector<std::vector<double>>& spiking::GGL::get_hebb(){
 std::vector<std::vector<double>>& spiking::GGL::get_antiHebb(){
 	return mat.fast_matrix;
 }
+
+
+/* ---- SimpleGGL class methods ---- */
+/*private methods*/
+void spiking::SimpleGGL::prepare_random_device(double a, double b){
+	std::random_device dev;
+    device.eng.seed(dev());
+    device.dist.param(std::uniform_real_distribution<double>::param_type(a, b));
+    device.dist.reset();
+}
+
+double spiking::SimpleGGL::draw(){
+	return device.dist(device.eng);
+}
+
+/*constructor*/
+spiking::SimpleGGL::SimpleGGL(std::vector<int>::size_type Nelem, double mupar, double gamma, double alp){
+	N = Nelem;
+	mu = mupar;
+	gma = gamma;
+	Pnbr = 0;
+	prepare_random_device(0.0, 1.0);
+
+	for(std::vector<double>::size_type i = 0; i != Nelem; ++i){
+		vstate.push_back(draw()*alp);
+		xstate.push_back(0);
+	}
+
+}
+
+/*---- Supporting functions ----*/
+void spiking::SimpleGGL::add_random_pattern(double prob, double strength){
+	prepare_random_device(0.0, 1.0);
+	std::vector<int> patt;
+	double sum = 0.0;
+	for(std::vector<int>::size_type i = 0; i != N; ++i){
+		if(draw() < prob){
+			patt.push_back(1);
+			sum += 1.0;
+		}
+		else{
+			patt.push_back(-1);
+			sum += -1.0;
+		}
+	}
+	patt_matrix.push_back(patt);
+	patt_sum.push_back(sum/static_cast<double>(N));
+	mvec_prime.push_back(0.0);
+	vstrg.push_back(strength);
+}
+/*-----------------------------------*/
