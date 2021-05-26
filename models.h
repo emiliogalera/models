@@ -295,6 +295,7 @@ namespace spiking{
 
 			/*---- Supporting functions ----*/
 			void add_random_pattern(double prob, double strength);
+			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
 	
 	};
 

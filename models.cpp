@@ -450,4 +450,21 @@ void spiking::SimpleGGL::add_random_pattern(double prob, double strength){
 	mvec_prime.push_back(0.0);
 	vstrg.push_back(strength);
 }
+
+void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, double strength){
+	std::vector<int> patt(N, -1);
+	std::vector<int>::size_type flag = 0;
+	std::vector<int>::size_type candidate;
+	double sum = -(static_cast<double>(N) - Pn) + Pn;
+	while(flag != Pn){
+		candidate = static_cast<std::vector<int>::size_type>(static_cast<double>(N)*draw());
+		if(patt[candidate] == -1){
+			patt[candidate] = 1;
+			++flag;
+		}
+	}
+	patt_matrix.push_back(patt);
+	vstrg.push_back(strength);
+	patt_sum.push_back(sum/static_cast<double>(N));
+}
 /*-----------------------------------*/
