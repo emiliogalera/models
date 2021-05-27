@@ -287,6 +287,7 @@ namespace spiking{
 			//private methods
 			void prepare_random_device(double a, double b);
 			double draw();
+			double phy(std::vector<double>::size_type i);
 
 		public:
 			/*Constructor - pass basic parameters
@@ -296,6 +297,16 @@ namespace spiking{
 			/*---- Supporting functions ----*/
 			void add_random_pattern(double prob, double strength);
 			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
+			/*---- Dynamic functions ----*/
+			double vtt(std::vector<double>::size_type i);
+			double m_utt(std::vector<int>::size_type u);//ok
+			double mp_utt(std::vector<double>::size_type u);//ok
+			int xtt(std::vector<int>::size_type i);// needs implementation
+		    
+		    void mprime_tt();// needs implementation
+			void net_vtt();// needs implementation
+			void net_vtt(std::vector<double>& input);// needs implementation
+			void net_xtt();// needs implementation
 	
 	};
 

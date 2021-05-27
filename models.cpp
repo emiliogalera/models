@@ -1,3 +1,4 @@
+#include <math.h>
 #include<string>
 #include<iostream>
 #include<random>
@@ -415,6 +416,11 @@ double spiking::SimpleGGL::draw(){
 	return device.dist(device.eng);
 }
 
+double spiking::SimpleGGL::phy(std::vector<double>::size_type i){
+	double aux = gma*vstate[i];
+	return aux/(1.0 + aux);
+}
+
 /*constructor*/
 spiking::SimpleGGL::SimpleGGL(std::vector<int>::size_type Nelem, double mupar, double gamma, double alp){
 	N = Nelem;
@@ -449,6 +455,7 @@ void spiking::SimpleGGL::add_random_pattern(double prob, double strength){
 	patt_sum.push_back(sum/static_cast<double>(N));
 	mvec_prime.push_back(0.0);
 	vstrg.push_back(strength);
+	++Pnbr;
 }
 
 void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, double strength){
@@ -466,5 +473,23 @@ void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, d
 	patt_matrix.push_back(patt);
 	vstrg.push_back(strength);
 	patt_sum.push_back(sum/static_cast<double>(N));
+	mvec_prime.push_back(0.0);
+	++Pnbr;
+}
+
+/*---- Dynamic functions----*/
+double spiking::SimpleGGL::m_utt(std::vector<double>::size_type u){
+	int proj = 0;
+	for(std::vector<int>::size_type i = 0; i != N; ++i){
+		proj += ((2*xstate[i]) - 1)*patt_matrix[u][i];
+	}
+	return static_cast<double>(proj)/static_cast<double>(N);
+}
+
+double spiking::SimpleGGL::mp_utt(std::vector<double>::size_type u){
+	return vstrg[u]*(m_utt(u) + patt_sum[u]);
+}
+double spiking::SimpleGGL::vtt(std::vector<double>::size_type i){
+	return i;
 }
 /*-----------------------------------*/
