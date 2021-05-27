@@ -262,7 +262,10 @@ namespace spiking{
 				std::vector<std::vector<double>>& get_antiHebb();
     };
 
-	/*Simplest GGL class which uses the adaped model*/	
+	/* Simplest GGL class which uses the adaped model
+	 * IMPORTANT: S_i[t] = 2X_i[t] - 1. The state variable is not
+	 * X in this model, it is S.
+	 * IMPORTANT: rho*/
 	class SimpleGGL{
 		private:
 			// network and neuron parameters
@@ -273,8 +276,9 @@ namespace spiking{
 			// model variables
 			std::vector<double> vstate; //membrane potential
 			//std::vector<double> mvec; // projection vector
-			std::vector<int> xstate; // binary state of network
+			std::vector<int> sstate; // binary state of network
 			std::vector<double> mvec_prime; // see quation 10 of GGL + patt
+			unsigned int rho;
 			
 			// patterns parameters
 			std::vector<double> vstrg; //Fmu: stores the strength of patts

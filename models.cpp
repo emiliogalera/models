@@ -428,10 +428,11 @@ spiking::SimpleGGL::SimpleGGL(std::vector<int>::size_type Nelem, double mupar, d
 	gma = gamma;
 	Pnbr = 0;
 	prepare_random_device(0.0, 1.0);
+	rho = 0;
 
 	for(std::vector<double>::size_type i = 0; i != Nelem; ++i){
 		vstate.push_back(draw()*alp);
-		xstate.push_back(0);
+		sstate.push_back(-1);
 	}
 
 }
@@ -481,7 +482,7 @@ void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, d
 double spiking::SimpleGGL::m_utt(std::vector<double>::size_type u){
 	int proj = 0;
 	for(std::vector<int>::size_type i = 0; i != N; ++i){
-		proj += ((2*xstate[i]) - 1)*patt_matrix[u][i];
+		proj += sstate[i]*patt_matrix[u][i];
 	}
 	return static_cast<double>(proj)/static_cast<double>(N);
 }
