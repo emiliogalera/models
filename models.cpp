@@ -455,8 +455,10 @@ void spiking::SimpleGGL::add_random_pattern(double prob, double strength){
 	patt_matrix.push_back(patt);
 	patt_sum.push_back(sum/static_cast<double>(N));
 	mvec_prime.push_back(0.0);
+	mvec.push_back(0.0);
 	vstrg.push_back(strength);
 	++Pnbr;
+	a = 1.0/(2.0*static_cast<double>(Pnbr));
 }
 
 void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, double strength){
@@ -475,10 +477,53 @@ void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, d
 	vstrg.push_back(strength);
 	patt_sum.push_back(sum/static_cast<double>(N));
 	mvec_prime.push_back(0.0);
+	mvec.push_back(0.0);
 	++Pnbr;
+	a = 1.0/(2.0*static_cast<double>(Pnbr));
+}
+
+void spiking::SimpleGGL::add_exterior_pattern(std::vector<int>& patt, double strength){
+	double sum=0.0;
+	std::vector<int> aux;
+	for(int& x : patt){
+		aux.push_back(x);
+		sum += x;
+	}
+	patt_matrix.push_back(aux);
+	vstrg.push_back(strength);
+	patt_sum.push_back(sum/static_cast<double>(N));
+	mvec_prime.push_back(0.0);
+	mvec.push_back(0.0);
+	++Pnbr;
+	a = 1.0/(2.0*static_cast<double>(Pnbr));
+}
+
+void spiking::SimpleGGL::random_spike(){
+	std::vector<int>::size_type i = static_cast<int>(draw()*static_cast<double>(N));
+	sstate[i] = 1;
 }
 
 /*---- Dynamic functions----*/
+unsigned int spiking::SimpleGGL::rho_tt(){
+	return rho;
+}
+
+double spiking::SimpleGGL::vtt(std::vector<int>::size_type i){
+	double aux = 0.0;
+	switch(sstate[i]){
+		case 1:{
+			aux = 0.0;
+			++rho;
+			break;
+		}
+		case -1:{
+			aux = (mu*vstate[i]) + act(i);
+			break;
+		}
+	}
+	return aux;
+}
+
 double spiking::SimpleGGL::m_utt(std::vector<double>::size_type u){
 	int proj = 0;
 	for(std::vector<int>::size_type i = 0; i != N; ++i){
@@ -488,9 +533,61 @@ double spiking::SimpleGGL::m_utt(std::vector<double>::size_type u){
 }
 
 double spiking::SimpleGGL::mp_utt(std::vector<double>::size_type u){
-	return vstrg[u]*(m_utt(u) + patt_sum[u]);
+	return vstrg[u]*(mvec[u] + patt_sum[u]);
 }
-double spiking::SimpleGGL::vtt(std::vector<double>::size_type i){
-	return i;
+
+int spiking::SimpleGGL::stt(std::vector<int>::size_type i){
+	int aux = (static_cast<int>(draw() < phy(i))*2) - 1;
+	return aux;
+}
+
+double spiking::SimpleGGL::act(std::vector<int>::size_type i){
+	double sum = 0.0;
+	for(std::vector<std::vector<double>>::size_type u = 0; u != Pnbr; ++u){
+		sum += static_cast<double>(patt_matrix[u][i])*mvec_prime[u];
+	}
+	return a*sum;
+}
+
+void spiking::SimpleGGL::net_m_utt(){
+	for(std::vector<double>::size_type u = 0; u != Pnbr; ++u){
+		mvec[u] = m_utt(u);
+	}
+}
+
+void spiking::SimpleGGL::net_vtt(){
+	rho = 0;
+	for(std::vector<int>::size_type i = 0; i != N; ++i){
+		vstate[i] = vtt(i);
+	}
+}
+
+void spiking::SimpleGGL::net_stt(){
+	for(std::vector<int>::size_type i = 0; i != N; ++i){
+		sstate[i] = stt(i);
+	}
+}
+
+void spiking::SimpleGGL::net_mp_utt(){
+	for(std::vector<double>::size_type u = 0; u != Pnbr; ++u){
+		mvec_prime[u] = mp_utt(u);
+	}
+}
+
+/*---- Probing functionsi ----*/
+std::vector<int>& spiking::SimpleGGL::get_state(){
+	return sstate;
+}
+
+std::vector<double>& spiking::SimpleGGL::get_vstate(){
+	return vstate;
+}
+
+std::vector<double>& spiking::SimpleGGL::get_mvec(){
+	return mvec;
+}
+
+std::vector<int>& spiking::SimpleGGL::get_pattern(std::vector<int>::size_type u){
+	return patt_matrix[u];
 }
 /*-----------------------------------*/

@@ -269,17 +269,20 @@ namespace spiking{
 	class SimpleGGL{
 		private:
 			// network and neuron parameters
-			double mu, gma;
+			// mu := neuron leakage term
+			// gma := firing function gain
+			// a := activity norm parameter
+			double mu, gma, a;
 			std::vector<int>::size_type N;
 			std::vector<std::vector<double>>::size_type Pnbr;
 
 			// model variables
 			std::vector<double> vstate; //membrane potential
-			//std::vector<double> mvec; // projection vector
+			std::vector<double> mvec; // projection vector
 			std::vector<int> sstate; // binary state of network
 			std::vector<double> mvec_prime; // see quation 10 of GGL + patt
 			unsigned int rho;
-			
+
 			// patterns parameters
 			std::vector<double> vstrg; //Fmu: stores the strength of patts
 			std::vector<double> patt_sum; //sum of patterns *normalized
@@ -301,17 +304,29 @@ namespace spiking{
 			/*---- Supporting functions ----*/
 			void add_random_pattern(double prob, double strength);
 			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
+			void add_exterior_pattern(std::vector<int>& patt, double strength); //implement!
+			void random_spike();
 			/*---- Dynamic functions ----*/
-			double vtt(std::vector<double>::size_type i);
+			unsigned int rho_tt(); //ok
+			double vtt(std::vector<int>::size_type i);//ok
+			double vtt(std::vector<int>::size_type i, double inp);
 			double m_utt(std::vector<int>::size_type u);//ok
 			double mp_utt(std::vector<double>::size_type u);//ok
-			int xtt(std::vector<int>::size_type i);// needs implementation
-		    
-		    void mprime_tt();// needs implementation
-			void net_vtt();// needs implementation
+			int stt(std::vector<int>::size_type i);// ok
+			double act(std::vector<int>::size_type i); // ok
+
+		    void net_m_utt();// ok
+			void net_vtt();// ok
 			void net_vtt(std::vector<double>& input);// needs implementation
-			void net_xtt();// needs implementation
-	
+			void net_stt();// ok
+			void net_mp_utt(); // ok
+
+			/*---- Probing functionsi ----*/
+			std::vector<int>& get_state();
+			std::vector<double>& get_vstate(); //membrane potential
+			std::vector<double>& get_mvec(); // projection vector
+			std::vector<int>& get_pattern(std::vector<int>::size_type u);
+
 	};
 
 }
