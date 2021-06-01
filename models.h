@@ -304,7 +304,7 @@ namespace spiking{
 			/*---- Supporting functions ----*/
 			void add_random_pattern(double prob, double strength);
 			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
-			void add_exterior_pattern(std::vector<int>& patt, double strength); //implement!
+			void add_exterior_pattern(std::vector<int>& patt, double strength);
 			void random_spike();
 			/*---- Dynamic functions ----*/
 			unsigned int rho_tt(); //ok
@@ -317,15 +317,15 @@ namespace spiking{
 
 		    void net_m_utt();// ok
 			void net_vtt();// ok
-			void net_vtt(std::vector<double>& input);// needs implementation
+			void net_vtt(std::vector<double>& input);// ok
 			void net_stt();// ok
 			void net_mp_utt(); // ok
 
 			/*---- Probing functionsi ----*/
-			std::vector<int>& get_state();
+			std::vector<int>& get_state(); // S state vector
 			std::vector<double>& get_vstate(); //membrane potential
 			std::vector<double>& get_mvec(); // projection vector
-			std::vector<int>& get_pattern(std::vector<int>::size_type u);
+			std::vector<int>& get_pattern(std::vector<int>::size_type u); // pattern
 
 	};
 
