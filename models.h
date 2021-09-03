@@ -272,16 +272,17 @@ namespace spiking{
 			// mu := neuron leakage term
 			// gma := firing function gain
 			// a := activity norm parameter
-			double mu, gma, a;
+
 			std::vector<int>::size_type N;
 			std::vector<std::vector<double>>::size_type Pnbr;
+			unsigned int rho;
+			double mu, gma, a;
 
 			// model variables
+			std::vector<int> sstate; // binary state of network
 			std::vector<double> vstate; //membrane potential
 			std::vector<double> mvec; // projection vector
-			std::vector<int> sstate; // binary state of network
 			std::vector<double> mvec_prime; // see quation 10 of GGL + patt
-			unsigned int rho;
 
 			// patterns parameters
 			std::vector<double> vstrg; //Fmu: stores the strength of patts
