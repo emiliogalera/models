@@ -1,7 +1,7 @@
 #include<string>
 #include<iostream>
 #include<fstream>
-#include"models.h"
+#include"../models.h"
 
 // call name.out w
 int main(int argc, char *argv[]){

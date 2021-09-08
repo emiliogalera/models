@@ -465,7 +465,8 @@ void spiking::SimpleGGL::add_random_pm_pattern(std::vector<int>::size_type Pn, d
 	std::vector<int> patt(N, -1);
 	std::vector<int>::size_type flag = 0;
 	std::vector<int>::size_type candidate;
-	double sum = -(static_cast<double>(N) - Pn) + Pn;
+	//double sum = -(static_cast<double>(N) - Pn) + Pn;
+	double sum = -(N - Pn) + Pn;
 	while(flag != Pn){
 		candidate = static_cast<std::vector<int>::size_type>(static_cast<double>(N)*draw());
 		if(patt[candidate] == -1){
