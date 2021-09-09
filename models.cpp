@@ -433,6 +433,7 @@ spiking::SimpleGGL::SimpleGGL(std::vector<int>::size_type Nelem, double mupar, d
 	for(std::vector<double>::size_type i = 0; i != Nelem; ++i){
 		vstate.push_back(draw()*alp);
 		sstate.push_back(-1);
+		activity_vec.push_back(0.0);
 	}
 
 }
@@ -518,7 +519,7 @@ double spiking::SimpleGGL::vtt(std::vector<int>::size_type i){
 			break;
 		}
 		case -1:{
-			aux = (mu*vstate[i]) + act(i);
+			aux = (mu*vstate[i]) + activity_vec[i];
 			break;
 		}
 	}
@@ -575,6 +576,12 @@ void spiking::SimpleGGL::net_mp_utt(){
 	}
 }
 
+void spiking::SimpleGGL::net_activity(){
+	for(std::vector<double>::size_type i = 0; i != N; ++i){
+		activity_vec[i] = act(i);
+	}
+}
+
 /*---- Probing functionsi ----*/
 std::vector<int>& spiking::SimpleGGL::get_state(){
 	return sstate;
@@ -590,5 +597,9 @@ std::vector<double>& spiking::SimpleGGL::get_mvec(){
 
 std::vector<int>& spiking::SimpleGGL::get_pattern(std::vector<int>::size_type u){
 	return patt_matrix[u];
+}
+
+unsigned int spiking::SimpleGGL::get_rho(){
+	return rho;
 }
 /*-----------------------------------*/

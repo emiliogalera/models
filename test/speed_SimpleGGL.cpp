@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[]){
 
-		int iter = 100;
+		int iter = 10;
 
 		std::cout << argc << std::endl;
 
@@ -31,10 +31,11 @@ int main(int argc, char* argv[]){
 	double mp_time = 0.0;
 	double v_time = 0.0;
 	double write_time = 0.0;
+	double activity_time = 0.0;
 
 	spiking::SimpleGGL sggl(N, mu, gamma, alpha);
 
-	std::vector<int>::size_type PN = N/2;
+	std::vector<int>::size_type PN = std::stoi(argv[7]);
 	std::cout << "Number of elements: "<< N << std::endl;
 	std::cout << "Number of positive: "<< PN << std::endl;
 
@@ -78,6 +79,8 @@ int main(int argc, char* argv[]){
 		for(int i = 0; i != P; ++i){
 			file << mref[i] << " ";
 		}
+		rho = sggl.get_rho();
+		//file << rho;
 		file << "\n";
 		time2 = std::chrono::steady_clock::now();
 		deltat = time2 - time1;
@@ -94,6 +97,12 @@ int main(int argc, char* argv[]){
 		mp_time += deltat.count();
 
 		time1 = std::chrono::steady_clock::now();
+		sggl.net_activity();
+		time2 = std::chrono::steady_clock::now();
+		deltat = time2 - time1;
+		activity_time += deltat.count();
+
+		time1 = std::chrono::steady_clock::now();
 		sggl.net_vtt();
 		time2 = std::chrono::steady_clock::now();
 		deltat = time2 - time1;
@@ -105,10 +114,11 @@ int main(int argc, char* argv[]){
 	std::cout << "time elapsed for x[t] update: " << (state_time/static_cast<double>(iter)) << std::endl;
 	std::cout << "time elapsed for m[t] update: " << m_time/static_cast<double>(iter) << std::endl;
 	std::cout << "time elapsed for m'[t] update: " << mp_time/static_cast<double>(iter) << std::endl;
+	std::cout << "time elapsed for act[t] update: " << activity_time/static_cast<double>(iter) << std::endl;
 	std::cout << "time elapsed for v[t] update: " << v_time/static_cast<double>(iter) << std::endl;
 	std::cout << "time elapsed for writing: " << write_time/static_cast<double>(iter) << std::endl;
 
-	double total = (state_time + m_time + mp_time + v_time + write_time)/static_cast<double>(iter);
+	double total = (state_time + m_time + mp_time + v_time + write_time + activity_time)/static_cast<double>(iter);
 
 	std::cout << "Total time elapsed for one iteration: " << total << std::endl;
 

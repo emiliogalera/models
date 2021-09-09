@@ -276,13 +276,15 @@ namespace spiking{
 			std::vector<int>::size_type N;
 			std::vector<std::vector<double>>::size_type Pnbr;
 			unsigned int rho;
-			double mu, gma, a;
+			//TODO: a will give wrong result if patt are random. FIX, transform into a vector!
+			double mu, gma, a; 
 
 			// model variables
 			std::vector<int> sstate; // binary state of network
 			std::vector<double> vstate; //membrane potential
 			std::vector<double> mvec; // projection vector
 			std::vector<double> mvec_prime; // see quation 10 of GGL + patt
+			std::vector<double> activity_vec;
 
 			// patterns parameters
 			std::vector<double> vstrg; //Fmu: stores the strength of patts
@@ -321,12 +323,14 @@ namespace spiking{
 			void net_vtt(std::vector<double>& input);// ok
 			void net_stt();// ok
 			void net_mp_utt(); // ok
+			void net_activity();
 
 			/*---- Probing functionsi ----*/
 			std::vector<int>& get_state(); // S state vector
 			std::vector<double>& get_vstate(); //membrane potential
 			std::vector<double>& get_mvec(); // projection vector
 			std::vector<int>& get_pattern(std::vector<int>::size_type u); // pattern
+			unsigned int get_rho();
 
 	};
 
