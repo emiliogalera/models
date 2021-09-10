@@ -308,7 +308,8 @@ namespace spiking{
 			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
 			void add_exterior_pattern(std::vector<int>& patt, double strength);
 			void random_spike();
-			//void zero_mvec();
+			void zero_activity();
+			void norm_activity();
 			/*---- Dynamic functions ----*/
 
 			unsigned int rho_tt(); //ok TODO: remove, seems redundant
@@ -318,6 +319,7 @@ namespace spiking{
 			double mp_utt(std::vector<double>::size_type u);//ok
 			int stt(std::vector<int>::size_type i);// ok
 			double act(std::vector<int>::size_type i); // ok
+			void new_act(std::vector<double>::size_type u);
 
 		    void net_m_utt();// ok
 			void net_vtt();// ok
@@ -325,6 +327,7 @@ namespace spiking{
 			void net_stt();// ok
 			void net_mp_utt(); // ok
 			void net_activity();
+			void new_net_activity();
 
 			/*---- Probing functionsi ----*/
 			std::vector<int>& get_state(); // S state vector

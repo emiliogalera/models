@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[]){
 
-		int iter = 10;
+		int iter = 500;
 
 		std::cout << argc << std::endl;
 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
 	std::chrono::duration<double> deltat;
 	//network dynamics
 	unsigned int rho = 1;
-	std::vector<double>& mref = sggl.get_mvec();
+	//std::vector<double>& mref = sggl.get_mvec();
 
 	for(int t = 0; t != iter; ++t){
 		time1 = std::chrono::steady_clock::now();
@@ -76,11 +76,11 @@ int main(int argc, char* argv[]){
 		m_time += deltat.count();
 
 		time1 = std::chrono::steady_clock::now();
-		for(int i = 0; i != P; ++i){
-			file << mref[i] << " ";
-		}
+		//for(int i = 0; i != P; ++i){
+		//	file << mref[i] << " ";
+		//}
 		rho = sggl.get_rho();
-		//file << rho;
+		file << rho;
 		file << "\n";
 		time2 = std::chrono::steady_clock::now();
 		deltat = time2 - time1;
@@ -97,7 +97,10 @@ int main(int argc, char* argv[]){
 		mp_time += deltat.count();
 
 		time1 = std::chrono::steady_clock::now();
-		sggl.net_activity();
+		//sggl.net_activity();
+		sggl.zero_activity();
+		sggl.new_net_activity();
+		sggl.norm_activity();
 		time2 = std::chrono::steady_clock::now();
 		deltat = time2 - time1;
 		activity_time += deltat.count();

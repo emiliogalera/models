@@ -503,12 +503,17 @@ void spiking::SimpleGGL::random_spike(){
 	sstate[i] = 1;
 }
 
-/*void spiking::SimpleGGL::zero_mvec(){
+void spiking::SimpleGGL::zero_activity(){
 	for(std::vector<double>::size_type i = 0; i != N; ++i){
-		mvec[i] = 0.0;
+		activity_vec[i] = 0.0;
 	}
-}*/
+}
 
+void spiking::SimpleGGL::norm_activity(){
+	for(std::vector<double>::size_type i = 0; i != N; ++i){
+		activity_vec[i] *= a;
+	}
+}
 /*---- Dynamic functions----*/
 unsigned int spiking::SimpleGGL::rho_tt(){
 	return rho;
@@ -555,6 +560,12 @@ double spiking::SimpleGGL::act(std::vector<int>::size_type i){
 	return a*sum;
 }
 
+void spiking::SimpleGGL::new_act(std::vector<double>::size_type u){
+	for(std::vector<int>::size_type i = 0; i != N; ++i){
+		activity_vec[i] += static_cast<double>(patt_matrix[u*N + i])*mvec_prime[u];
+	}
+}
+
 void spiking::SimpleGGL::net_m_utt(){
 	for(std::vector<double>::size_type u = 0; u != Pnbr; ++u){
 		mvec[u] = m_utt(u);
@@ -583,6 +594,12 @@ void spiking::SimpleGGL::net_mp_utt(){
 void spiking::SimpleGGL::net_activity(){
 	for(std::vector<double>::size_type i = 0; i != N; ++i){
 		activity_vec[i] = act(i);
+	}
+}
+
+void spiking::SimpleGGL::new_net_activity(){
+	for(std::vector<double>::size_type u = 0; u != Pnbr; ++u){
+		new_act(u);
 	}
 }
 
