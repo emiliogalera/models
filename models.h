@@ -276,7 +276,6 @@ namespace spiking{
 			std::vector<int>::size_type N;
 			std::vector<std::vector<double>>::size_type Pnbr;
 			unsigned int rho;
-			//TODO: a will give wrong result if patt are random. FIX, transform into a vector!
 			double mu, gma, a; 
 
 			// model variables
@@ -289,7 +288,7 @@ namespace spiking{
 			// patterns parameters
 			std::vector<double> vstrg; //Fmu: stores the strength of patts
 			std::vector<double> patt_sum; //sum of patterns *normalized
-			std::vector<std::vector<int>> patt_matrix; //stores -1,1 patterns
+			std::vector<int> patt_matrix; //stores -1,1 patterns
 
 			//random device variables
 			random_device device;
@@ -309,8 +308,10 @@ namespace spiking{
 			void add_random_pm_pattern(std::vector<int>::size_type Pn, double strength);
 			void add_exterior_pattern(std::vector<int>& patt, double strength);
 			void random_spike();
+			//void zero_mvec();
 			/*---- Dynamic functions ----*/
-			unsigned int rho_tt(); //ok
+
+			unsigned int rho_tt(); //ok TODO: remove, seems redundant
 			double vtt(std::vector<int>::size_type i);//ok
 			double vtt(std::vector<int>::size_type i, double inp);
 			double m_utt(std::vector<int>::size_type u);//ok
@@ -329,7 +330,7 @@ namespace spiking{
 			std::vector<int>& get_state(); // S state vector
 			std::vector<double>& get_vstate(); //membrane potential
 			std::vector<double>& get_mvec(); // projection vector
-			std::vector<int>& get_pattern(std::vector<int>::size_type u); // pattern
+			std::vector<int> get_pattern(std::vector<int>::size_type u); // pattern
 			unsigned int get_rho();
 
 	};
