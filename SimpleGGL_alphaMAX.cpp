@@ -6,6 +6,7 @@
 #include"models.h"
 
 
+// call signature .out N gma mu net_alpha P F
 int main(int argc, char* argv[]){
 
 	std::cout << argc << std::endl;
