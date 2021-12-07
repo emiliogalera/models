@@ -1,6 +1,7 @@
 .vscode/
 data_test/*
 data/**
+simu_pc_lab/**
 *.sw*
 *.out
 *.log

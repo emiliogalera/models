@@ -1,10 +1,19 @@
 #include <fstream>
 #include<iostream>
+#include<iterator>
+#include<algorithm>
 #include <sstream>
 #include<string>
 #include<vector>
 #include"models.h"
 
+void string_to_list(std::string str, std::vector<std::string>& svec){
+	std::istringstream iss(str);
+	svec.clear();
+	std::copy(std::istream_iterator<std::string>(iss),
+			  std::istream_iterator<std::string>(),
+			  std::back_inserter(svec));
+}
 
 // call signature .out N gma mu net_alpha P F
 int main(int argc, char* argv[]){
@@ -19,15 +28,31 @@ int main(int argc, char* argv[]){
 	// number of patterns and strenght
 	int P = std::stoi(argv[5]);
 	double F = std::stod(argv[6]);
-	std::vector<int>::size_type PN = N/2;
+	//std::vector<int>::size_type PN = N/2;
 
 	spiking::SimpleGGL sggl(N, mu, gma, net_alpha);
 
 
 	// Stores P patterns with strength F
-	for(int p = 0; p != P; ++p){
+	/*for(int p = 0; p != P; ++p){
 		sggl.add_random_pm_pattern(PN, F);
+	}*/
+	std::stringstream pattern_fn;
+	pattern_fn << "data/N" << N << "/P=" << P << "_.txt";
+	std::ifstream pattern(pattern_fn.str());
+	std::string line;
+	std::vector<std::string> str_list;
+	std::vector<int> patt;
+	while(std::getline(pattern, line)){
+		string_to_list(line, str_list);
+		for(std::string& token : str_list){
+			patt.push_back(std::stoi(token));
+		}
+		sggl.add_exterior_pattern(patt, F);
+		patt.clear();
+		line.clear();
 	}
+	pattern.close();
 
 	//TODO:
 	// - create 2 file pointes, one to store r[t] and another to store m[t]
@@ -46,8 +71,8 @@ int main(int argc, char* argv[]){
 	file_rho.open(name_rho.str());
 	file_m.open(name_m.str());
 	//Dynamics
-	int time = 50000;
-	int discard = time/2;
+	int time = 25000;
+	int discard = 5000;
 	unsigned int rho = 1;
 	std::vector<double>& mref = sggl.get_mvec();
 
