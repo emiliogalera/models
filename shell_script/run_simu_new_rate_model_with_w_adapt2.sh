@@ -3,38 +3,40 @@
 tau=600
 eps=$(bc <<< "scale=6; 0.009")
 
-pnVec=(10 20 30)
+pnVec=(60)
 #pnVec=(35 45 55 65 75)
 N=500
 
 vecSize=50
-delta=2
+
 
 # change this to some other value
-declare -a gmaVec
-declare -a strVec
-str=2
-gma=2
 
-for i in $(seq 1 1 $vecSize);
-do
-		strVec+=($str)
-		gmaVec+=($gma)
-		gma=$(($gma + $delta))
-		str=$(($str + $delta))
-done
 
-for i in "${strVec[@]}";
-do
-		echo $i
-done
-exit
+
+
+
+
 
 let nProcs=7
 let k=1
 
 for p in "${pnVec[@]}";
 do
+	declare -a gmaVec
+	declare -a strVec
+	str=$(bc <<< "scale=6; 0.2*$p")
+	gma=2
+	delta_gma=2
+	delta_str=$(bc <<< "scale=6; (10*$p)/50")
+	for i in $(seq 1 1 $vecSize);
+	do
+		strVec+=($str)
+		gmaVec+=($gma)
+		gma=$(($gma + $delta_gma))
+		str=$(bc <<< "scale=6; $str + $delta_str")
+	done
+
 	mkdir data/newRate/best_m_with_adapt/N$N/P$p
 	for gma in "${gmaVec[@]}";
 	do

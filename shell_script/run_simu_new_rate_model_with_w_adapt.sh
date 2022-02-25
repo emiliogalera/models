@@ -2,8 +2,7 @@
 
 declare -a tauVec
 declare -a epsVec
-
-pnVec=(10)
+pnVec=(20)
 #pnVec=(35 45 55 65 75)
 N=500
 
@@ -11,12 +10,12 @@ vecSize=50
 delta=20
 
 # change this to some other value
-gma=10
+gma=20
 str=10
 
 tau=10
-eps=$(bc <<< "scale=6; 0.0004")
-delta_eps=$(bc <<< "scale=6; 0.0002")
+eps=$(bc <<< "scale=6; 0.0001")
+delta_eps=$(bc <<< "scale=6; 0.002")
 for i in $(seq 1 1 $vecSize);
 do
 		tauVec+=($tau)

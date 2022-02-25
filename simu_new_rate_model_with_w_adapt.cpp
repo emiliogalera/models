@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
 	unsigned int TIME = 7500;
 
 	std::stringstream filename;
-	filename << "data/newRate/best_m_with_adapt/N" << N << "/" << "P" << P << "/" << "simu_" << "P=" << P<< "_f=" << fpatts << "_gma=" << gamma << "_str=" << strength << "_.txt";
+	filename << "data/newRate/best_m_with_adapt/N" << N << "/" << "P" << P << "/" << "simu_" << "P=" << P<< "_f=" << fpatts << "_tau=" << tau_fast << "_eps=" << eps << "_.txt";
 
 	std::cout << filename.str() << std::endl;
 
