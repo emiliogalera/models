@@ -30,13 +30,11 @@ RateNet::RateNet(int net_size, double gma, double fval){
 
 void RateNet::add_random_pattern(double probability, double str){
 	std::vector<int> pattern;
-	unsigned int f = 0;
 	random_setter(0.0, 1.0);
 
 	for(std::vector<int>::size_type i = 0; i != N; ++i){
 		if(sample() < probability){
 			pattern.push_back(1);
-			++f;
 		}
 		else{
 			pattern.push_back(0);
@@ -67,6 +65,22 @@ void RateNet::add_random_10(unsigned int active_number, double str){
 void RateNet::add_random_fpattern(double str){
 	unsigned int Nf = static_cast<unsigned int>(static_cast<double>(N)*f);
 	add_random_10(Nf, str);
+}
+
+void RateNet::add_exterior_pattern(std::vector<int>& patt, double str){
+	std::vector<int> dummy_pattern;
+	for(int& xi_i : patt){
+		dummy_pattern.push_back(xi_i);
+	}
+	p_matrix.push_back(dummy_pattern);
+	strvec.push_back(str);
+	++ P;
+}
+
+void RateNet::add_exterior_state(std::vector<double>& state){
+	for(std::vector<double>::size_type i = 0; i != N; ++i){
+		state_vector[i] = state[i];
+	}
 }
 
 void RateNet::random_state_gen(double a, double b){
@@ -202,6 +216,10 @@ unsigned int RateNet::get_P(){
 
 std::vector<int>& RateNet::get_pattern(std::vector<int>::size_type u){
 	return p_matrix[u];
+}
+
+std::vector<double>& RateNet::get_state(){
+	return state_vector;
 }
 
 std::vector<std::vector<double>>::size_type RateNet::get_sizeof_w_matrix(){

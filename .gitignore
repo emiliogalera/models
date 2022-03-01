@@ -4,4 +4,5 @@ data/**
 simu_pc_lab/**
 *.sw*
 *.out
+*.o
 *.log

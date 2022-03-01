@@ -33,6 +33,8 @@ class RateNet{
 		void add_random_pattern(double probability, double str);
 		void add_random_10(unsigned int active_number, double str);
 		void add_random_fpattern(double str);
+		void add_exterior_pattern(std::vector<int>& patt, double str);
+		void add_exterior_state(std::vector<double>& state);
 		void random_state_gen(double a, double b);
 		void random_setter(double a, double b);
 		double sample();
@@ -57,6 +59,7 @@ class RateNet{
 		double projection(std::vector<double>::size_type u);
 		unsigned int get_P();
 		std::vector<int>& get_pattern(std::vector<int>::size_type u);
+		std::vector<double>& get_state();
 		std::vector<std::vector<double>>::size_type get_sizeof_w_matrix();
 		std::vector<std::vector<double>>::size_type get_sizeof_w_matrix_fast();
 		std::vector<std::vector<int>>::size_type get_sizeof_p_matrix();

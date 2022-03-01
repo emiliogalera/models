@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
 	// start anti-hebb matrix
 	net.start_fast_matrix();
 
-	unsigned int TIME = 7500;
+	unsigned int TIME = 20000;
 
 	std::stringstream filename;
 	filename << "data/newRate/best_m_with_adapt/N" << N << "/" << "P" << P << "/" << "simu_" << "P=" << P<< "_f=" << fpatts << "_tau=" << tau_fast << "_eps=" << eps << "_.txt";
