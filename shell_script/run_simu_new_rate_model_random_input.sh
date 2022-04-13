@@ -19,7 +19,7 @@ let k=0
 
 for P in "${vecP[@]}";
 do
-	str=$(bc <<< "scale=3; $P*2.0")
+	str=$(bc <<< "scale=3; $P*1.0")
 
 	for H in "${Hvec[@]}";
 	do
